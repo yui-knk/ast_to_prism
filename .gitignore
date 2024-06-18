@@ -1,0 +1,12 @@
+/.DS_Store
+/.bundle/
+/.gem_rbs_collection/
+/.irbrc
+/.vscode/
+/Gemfile.lock
+/coverage/
+/parser.output
+/pkg/
+/tmp/
+/vendor/bundle
+/.idea/
