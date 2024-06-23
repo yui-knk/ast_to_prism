@@ -250,6 +250,8 @@ RSpec.describe "basic test cases return same nodes with prism" do
   describe "constant with expr" do
     it "tests" do
       test_code(<<~CODE)
+      pending "delimiter_loc and name_loc are not supported"
+
         expr::A
       CODE
     end
@@ -662,14 +664,168 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "begin, rescue, else, ensure" do
+    it "tests" do
+      pending "begin_keyword_loc and end_keyword_loc are not supported"
+
+      test_code(<<~CODE)
+        begin
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "Need to keep BEGIN node"
+
+      test_code(<<~CODE)
+        begin
+          1
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+        rescue
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue StandardError
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue StandardError => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue ArgumentError => e
+          2
+        rescue ArgumentError => @e
+          3
+        rescue ArgumentError => @@e
+          4
+        rescue ArgumentError => $e
+          5
+        rescue ArgumentError => E
+          6
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        e = 0
+
+        1.times do
+          begin
+            1
+          rescue NoMethodError => e
+            2
+          end
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue NoMethodError, ArgumentError => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+        rescue
+        else
+        ensure
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue
+          2
+        else
+          3
+        ensure
+          4
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        def m
+          1
+        rescue
+          2
+        else
+          3
+        ensure
+          4
+        end
+      CODE
+    end
+  end
+
   describe "case with head" do
     it "tests" do
       test_code(<<~CODE)
         case x
         when 1
-          :a
-        when 2, 3
-          :b
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        case x
+        when 1 then
         end
       CODE
     end
@@ -678,6 +834,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       test_code(<<~CODE)
         case x
         when 1
+          :a
+        when 2, 3
+          :b
         end
       CODE
     end
