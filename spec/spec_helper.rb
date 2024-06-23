@@ -20,6 +20,30 @@ module Prism
     end
   end
 
+  class StringNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.content_loc == other.content_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
+  class XStringNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.content_loc == other.content_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
   class IfNode
     prepend Module.new {
       def ===(other)
@@ -183,6 +207,60 @@ module Prism
         self.location == other.location &&
         self.delimiter_loc == other.delimiter_loc &&
         self.name_loc == other.name_loc
+      end
+    }
+  end
+
+  class BeginNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.begin_keyword_loc == other.begin_keyword_loc &&
+        self.end_keyword_loc == other.end_keyword_loc
+      end
+    }
+  end
+
+  class HashNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
+  class AssocNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class AssocSplatNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class SuperNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc &&
+        self.lparen_loc == other.lparen_loc &&
+        self.rparen_loc == other.rparen_loc
       end
     }
   end

@@ -72,12 +72,17 @@ module AstToPrism
       Prism::ProgramNode.new(source, locals, convert_stmts(body), location(node))
     end
 
-    # TODO: Remove this branch. This 
-    def convert_stmts(node)
+    # TODO: Remove this branch once original node keeps BLOCK node for single statement
+    def convert_stmts(node, range = 0..-1)
       return nil if node.nil?
 
       if node.type == :BLOCK
-        convert_node(node)
+        body = node.children[range].map do |n|
+          convert_node(n)
+        end
+
+        # (source, body, location)
+        Prism::StatementsNode.new(source, body, location(node))
       else
         # (source, body, location)
         Prism::StatementsNode.new(source, [convert_node(node)], location(node))
@@ -98,6 +103,33 @@ module AstToPrism
       Prism::ArgumentsNode.new(source, 0, arguments, location(args))
     end
 
+    def convert_assoc(node)
+      return [] if node.nil?
+
+      # TODO: node.children should not include last nil
+      node.children[0...-1].each_slice(2).map do |k, v|
+        if k
+          # TODO: location should include both k & v ranges.
+
+          Prism::AssocNode.new(
+            source,          # source
+            convert_node(k), # key
+            convert_node(v), # value
+            null_location,   # operator_loc
+            location(k)      # location
+          )
+        else
+          Prism::AssocSplatNode.new(
+            source,          # source
+            convert_node(v), # value
+            null_location,   # operator_loc
+            location(v)      # location
+          )
+        end
+      end
+    end
+
+    # TODO: Implment this method
     def convert_block_parameters(nd_args)
       return nil if nd_args.nil?
     end
@@ -139,12 +171,17 @@ module AstToPrism
       while node do
         nd_head, nd_body, nd_next = node.children
 
+        cond = nd_head.children[0...-1].map do |n|
+          convert_node(n)
+        end
+
         # (source, keyword_loc, conditions, then_keyword_loc, statements, location)
-        conditions << Prism::WhenNode.new(source, null_location, convert_node(nd_head), null_location, convert_stmts(nd_body), location(node))
+        conditions << Prism::WhenNode.new(source, null_location, cond, null_location, convert_stmts(nd_body), location(node))
 
         if nd_next&.type == :WHEN
           node = nd_next
         else
+          # NOTE: end_keyword_loc of ElseNode seems to be redundant
           # (source, else_keyword_loc, statements, end_keyword_loc, location)
           consequent = Prism::ElseNode.new(source, null_location, convert_stmts(nd_next), null_location, location(node))
           node = nil
@@ -154,6 +191,13 @@ module AstToPrism
       return conditions, consequent
     end
 
+    def convert_block_body(node)
+      if node.type == :BEGIN && node.children == [nil]
+        nil
+      else
+        convert_stmts(node)
+      end
+    end
 
     def convert_block(node)
       return nil if node.nil?
@@ -168,7 +212,7 @@ module AstToPrism
         source,                         # source
         locals,                         # locals
         convert_block_parameters(args), # parameters
-        convert_stmts(body),            # body
+        convert_block_body(body),       # body
         null_location,                  # opening_loc
         null_location,                  # closing_loc
         location(node)                  # location
@@ -193,6 +237,88 @@ module AstToPrism
       when :COLON3
         nd_mid, = node.children
         nd_mid
+      else
+        not_supported(node)
+      end
+    end
+
+    def errinfo_assign?(node)
+      # if node.type != :BLOCK
+      #   raise "BLOCK NODE is expected but it's #{node.type} node."
+      # end
+
+      return false if node.type != :BLOCK
+
+      case (n = node.children[0]).type
+      when :LASGN, :DASGN, :IASGN, :CVASGN, :GASGN, :CDECL
+        n.children[1].type == :ERRINFO
+      else
+        false
+      end
+    end
+
+    def convert_errinfo_assignment(node)
+      # value (RHS) is ERRINFO NODE
+
+      case node.type
+      when :LASGN
+        vid, _ = node.children
+
+        # (source, name, depth, location)
+        Prism::LocalVariableTargetNode.new(
+          source,
+          vid,
+          0,
+          location(node)
+        )
+      when :DASGN
+        vid, _ = node.children
+
+        # TODO: Implement depth
+
+        # (source, name, depth, location)
+        Prism::LocalVariableTargetNode.new(
+          source,
+          vid,
+          0,
+          location(node)
+        )
+      when :IASGN
+        vid, _ = node.children
+
+        # (source, name, location)
+        Prism::InstanceVariableTargetNode.new(
+          source,
+          vid,
+          location(node)
+        )
+      when :CVASGN
+        vid, _ = node.children
+
+        # (source, name, location)
+        Prism::ClassVariableTargetNode.new(
+          source,
+          vid,
+          location(node)
+        )
+      when :GASGN
+        vid, _ = node.children
+
+        # (source, name, location)
+        Prism::GlobalVariableTargetNode.new(
+          source,
+          vid,
+          location(node)
+        )
+      when :CDECL
+        vid, _ = node.children
+
+        # (source, name, location)
+        Prism::ConstantTargetNode.new(
+          source,
+          vid,
+          location(node)
+        )
       else
         not_supported(node)
       end
@@ -231,11 +357,28 @@ module AstToPrism
         nd_head, nd_body = node.children
         conditions, consequent = convert_case_body(nd_body)
 
-        # (source, predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location)
-        Prism::CaseNode.new(source, convert_node(nd_head), conditions, consequent,
-                            null_location, null_location, location(node))
+        Prism::CaseNode.new(
+          source,                # source
+          convert_node(nd_head), # predicate
+          conditions,            # conditions
+          consequent,            # consequent
+          null_location,         # case_keyword_loc
+          null_location,         # end_keyword_loc
+          location(node)         # location
+        )
       when :CASE2
-        not_supported(node)
+        nd_head, nd_body = node.children
+        conditions, consequent = convert_case_body(nd_body)
+
+        Prism::CaseNode.new(
+          source,                # source
+          convert_node(nd_head), # predicate
+          conditions,            # conditions
+          consequent,            # consequent
+          null_location,         # case_keyword_loc
+          null_location,         # end_keyword_loc
+          location(node)         # location
+        )
       when :CASE3
         not_supported(node)
       when :WHEN
@@ -243,9 +386,41 @@ module AstToPrism
       when :IN
         not_supported(node)
       when :WHILE
-        not_supported(node)
+        nd_cond, nd_body, nd_state = node.children
+
+        if nd_state
+          flags = 0
+        else
+          flags = Prism::LoopFlags::BEGIN_MODIFIER
+        end
+
+        Prism::WhileNode.new(
+          source,                 # source
+          flags,                  # flags
+          null_location,          # keyword_loc
+          null_location,          # closing_loc
+          convert_node(nd_cond),  # predicate
+          convert_stmts(nd_body), # statements
+          location(node)          # location
+        )
       when :UNTIL
-        not_supported(node)
+        nd_cond, nd_body, nd_state = node.children
+
+        if nd_state
+          flags = 0
+        else
+          flags = Prism::LoopFlags::BEGIN_MODIFIER
+        end
+
+        Prism::UntilNode.new(
+          source,                 # source
+          flags,                  # flags
+          null_location,          # keyword_loc
+          null_location,          # closing_loc
+          convert_node(nd_cond),  # predicate
+          convert_stmts(nd_body), # statements
+          location(node)          # location
+        )
       when :ITER
         # example: 3.times { foo }
 
@@ -279,19 +454,124 @@ module AstToPrism
       when :NEXT
         not_supported(node)
       when :RETURN
-        not_supported(node)
+        nd_stts, = node.children
+        flags = 0
+
+        Prism::ReturnNode.new(
+          source,                # source
+          flags,                 # flags
+          null_location,         # keyword_loc
+          convert_stts(nd_stts), # arguments
+          location(node)         # location
+        )
       when :REDO
         not_supported(node)
       when :RETRY
         not_supported(node)
       when :BEGIN
-        not_supported(node)
+        # example: begin; 1; end
+
+        # Structure:
+        #
+        # * (NODE_ENSURE)
+        #   * (NODE_RESCUE)
+        #     * nd_head: NODE_BEGIN
+        #     * nd_resq: NODE_RESBODY
+        #     * nd_else:
+
+        nd_body, = node.children
+
+        Prism::BeginNode.new(
+          source,                 # source
+          null_location,          # begin_keyword_loc
+          convert_stmts(nd_body), # statements
+          nil,                    # rescue_clause
+          nil,                    # else_clause
+          nil,                    # ensure_clause
+          null_location,          # end_keyword_loc
+          location(node)          # location
+        )
       when :RESCUE
-        not_supported(node)
+        nd_head, nd_resq, nd_else  = node.children
+
+        if nd_else
+          else_clause = Prism::ElseNode.new(
+            source,                 # source
+            null_location,          # else_keyword_loc
+            convert_stmts(nd_else), # statements
+            null_location,          # end_keyword_loc
+            location(nd_else)       # location
+          )
+        else
+          else_clause = nil
+        end
+
+        Prism::BeginNode.new(
+          source,                 # source
+          null_location,          # begin_keyword_loc
+          convert_stmts(nd_head), # statements
+          convert_node(nd_resq),  # rescue_clause
+          else_clause,            # else_clause
+          nil,                    # ensure_clause
+          null_location,          # end_keyword_loc
+          location(node)          # location
+        )
       when :RESBODY
-        not_supported(node)
+        nd_args, nd_body, nd_next  = node.children
+
+        if nd_args
+          exceptions = nd_args.children[0...-1].map do |n|
+            convert_node(n)
+          end
+        else
+          exceptions = []
+        end
+
+        # TODO: 
+        if errinfo_assign?(nd_body) # `rescue Err => e` or not
+          reference = convert_errinfo_assignment(nd_body.children[0])
+          statements = convert_stmts(nd_body, 1..-1)
+        else
+          reference = nil
+          statements = convert_stmts(nd_body)
+        end
+
+        Prism::RescueNode.new(
+          source,                # source
+          null_location,         # keyword_loc
+          exceptions,            # exceptions
+          null_location,         # operator_loc
+          reference,             # reference
+          statements,            # statements
+          convert_node(nd_next), # consequent
+          location(node)         # location
+        )
       when :ENSURE
-        not_supported(node)
+        nd_head, nd_ensr = node.children
+
+        # TODO: Change original NODE strucutre
+        if nd_head.type == :RESCUE
+          res_nd_head, res_nd_resq, res_nd_else = nd_head.children
+
+          statements = convert_stmts(res_nd_head)
+          rescue_clause = convert_node(res_nd_resq)
+          else_clause = convert_stmts(res_nd_else)
+        else
+          statements = convert_stmts(nd_head)
+          rescue_clause = nil
+          else_clause = nil
+        end
+
+        Prism::BeginNode.new(
+          source,                 # source
+          null_location,          # begin_keyword_loc
+          statements,             # statements
+          rescue_clause,          # rescue_clause
+          else_clause,            # else_clause
+          convert_stmts(nd_ensr), # ensure_clause
+          null_location,          # end_keyword_loc
+          location(node)          # location
+        )
       when :AND
         nd_1st, nd_2nd = node.children
 
@@ -459,15 +739,21 @@ module AstToPrism
           location(node)    # location
         )
       when :SUPER
-        # TODO: Need to take care of block like `super(1) {}`
-
-        # (source, keyword_loc, lparen_loc, arguments, rparen_loc, block, location)
-        Prism::SuperNode.new(source, null_location, null_location, convert_arguments(node.children[0]), null_location, nil, location(node))
+        Prism::SuperNode.new(
+          source,                              # source
+          null_location,                       # keyword_loc
+          null_location,                       # lparen_loc
+          convert_arguments(node.children[0]), # arguments
+          null_location,                       # rparen_loc
+          block,                               # block
+          location(node)                       # location
+        )
       when :ZSUPER
-        # TODO: Need to take care of block like `super {}`
-
-        # (source, block, location)
-        Prism::ForwardingSuperNode.new(source, nil, location(node))
+        Prism::ForwardingSuperNode.new(
+          source,        # source
+          block,         # block
+          location(node) # location
+        )
       when :LIST
         # TODO: node.children should not include last nil
         ary = node.children[0...-1].map do |n|
@@ -479,7 +765,16 @@ module AstToPrism
         # (source, flags, elements, opening_loc, closing_loc, location)
         Prism::ArrayNode.new(source, 0, [], null_location, null_location, location(node))
       when :HASH
-        not_supported(node)
+        nd_head, = node.children
+        elements = convert_assoc(nd_head)
+
+        Prism::HashNode.new(
+          source,        # source
+          null_location, # opening_loc
+          elements,      # elements
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :YIELD
         not_supported(node)
       when :LVAR
@@ -527,22 +822,105 @@ module AstToPrism
       when :MATCH3
         not_supported(node)
       when :STR
-        not_supported(node)
+        string, = node.children
+        flags = 0
+
+        Prism::StringNode.new(
+          source,         # source
+          flags,          # flags
+          null_location,  # opening_loc
+          null_location,  # content_loc
+          null_location,  # closing_loc
+          string,         # unescaped
+          location(node), # location
+        )
       when :XSTR
-        not_supported(node)
+        string, = node.children
+        flags = 0
+
+        Prism::XStringNode.new(
+          source,         # source
+          flags,          # flags
+          null_location,  # opening_loc
+          null_location,  # content_loc
+          null_location,  # closing_loc
+          string,         # unescaped
+          location(node), # location
+        )
       when :INTEGER
+        val, = node.children
         # TODO: Need to expose `base` for flags
-        # (source, flags, value, location)
-        Prism::IntegerNode.new(source, IntegerBaseFlags::DECIMAL, node.children[0], location(node))
+        flags = IntegerBaseFlags::DECIMAL
+
+        Prism::IntegerNode.new(
+          source,        # source
+          flags,         # flags
+          val,           # value
+          location(node) # location
+        )
       when :FLOAT
-        # (source, value, location)
-        Prism::FloatNode.new(source, node.children[0], location(node))
+        val, = node.children
+
+        Prism::FloatNode.new(
+          source,        # source
+          val,           # value
+          location(node) # location
+        )
       when :RATIONAL
-        # (source, flags, numerator, denominator, location)
-        not_supported(node)
+        val, = node.children
+        # TODO: Need to expose `base` for flags
+        flags = IntegerBaseFlags::DECIMAL
+
+        Prism::RationalNode.new(
+          source,          # source
+          flags,           # flags
+          val.numerator,   # numerator
+          val.denominator, # denominator
+          location(node)   # location
+        )
       when :IMAGINARY
-        # (source, numeric, location)
-        not_supported(node)
+        # TODO: Original Node should have val as Node because it needs to take care of flags.
+
+        val, = node.children
+        img = val.imaginary
+
+        case img
+        when Integer
+          # TODO: Need to expose `base` for flags
+          flags = IntegerBaseFlags::DECIMAL
+
+          numeric = Prism::IntegerNode.new(
+            source,        # source
+            flags,         # flags
+            img,           # value
+            location(node) # location
+          )
+        when Float
+          numeric = Prism::FloatNode.new(
+            source,        # source
+            img,           # value
+            location(node) # location
+          )
+        when Rational
+        # TODO: Need to expose `base` for flags
+        flags = IntegerBaseFlags::DECIMAL
+
+        numeric = Prism::RationalNode.new(
+          source,          # source
+          flags,           # flags
+          img.numerator,   # numerator
+          img.denominator, # denominator
+          location(node)   # location
+        )
+        else
+          raise "#{img.class} is not supported for IMAGINARY Node val."
+        end
+
+        Prism::ImaginaryNode.new(
+          source,        # source
+          numeric,       # numeric
+          location(node) # location
+        )
       when :REGX
         not_supported(node)
       when :ONCE
@@ -556,10 +934,19 @@ module AstToPrism
       when :DSYM
         not_supported(node)
       when :SYM
+        string, = node.children[0]
         # TODO: Implement flags
+        flags = 0
 
-        # (source, flags, opening_loc, value_loc, closing_loc, unescaped, location)
-        Prism::SymbolNode.new(source, 0, null_location, null_location, null_location, node.children[0], location(node))
+        Prism::SymbolNode.new(
+          source,        # source
+          flags,         # flags
+          null_location, # opening_loc
+          null_location, # value_loc
+          null_location, # closing_loc
+          string.to_s,   # unescaped
+          location(node) # location
+        )
       when :EVSTR
         not_supported(node)
       when :ARGSCAT
@@ -707,9 +1094,27 @@ module AstToPrism
         # (source, flags, left, right, operator_loc, location)
         Prism::RangeNode.new(source, RangeFlags::EXCLUDE_END, convert_node(nd_beg), convert_node(nd_end), null_location, location(node))
       when :FLIP2
-        not_supported(node)
+        nd_beg, nd_end = node.children
+
+        Prism::FlipFlopNode.new(
+          source,               # source
+          0,                    # flags
+          convert_node(nd_beg), # left
+          convert_node(nd_end), # right
+          null_location,        # operator_loc
+          location(node)        # location
+        )
       when :FLIP3
-        not_supported(node)
+        nd_beg, nd_end = node.children
+
+        Prism::FlipFlopNode.new(
+          source,                  # source
+          RangeFlags::EXCLUDE_END, # flags
+          convert_node(nd_beg),    # left
+          convert_node(nd_end),    # right
+          null_location,           # operator_loc
+          location(node)           # location
+        )
       when :SELF
         # (source, location)
         Prism::SelfNode.new(source, location(node))

@@ -41,11 +41,43 @@ RSpec.describe "basic test cases return same nodes with prism" do
     it "tests" do
       test_code("1")
     end
+
+    it "tests" do
+      test_code("-1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0b1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("01")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0o1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0x1")
+    end
   end
 
   describe "float" do
     it "tests" do
       test_code("1.2")
+    end
+
+    it "tests" do
+      test_code("-1.2")
     end
   end
 
@@ -53,25 +85,121 @@ RSpec.describe "basic test cases return same nodes with prism" do
     it "tests" do
       test_code("1r")
     end
+
+    it "tests" do
+      test_code("-1r")
+    end
+
+    it "tests" do
+      test_code("1.0r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0b1r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("01r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0o1r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0x1r")
+    end
+
+    it "tests" do
+      test_code("1.2r")
+    end
   end
 
   describe "imaginary" do
     it "tests" do
       test_code("1i")
+    end
+
+    it "tests" do
+      test_code("-1i")
+    end
+
+    it "tests" do
       test_code("1.0i")
+    end
+
+    it "tests" do
       test_code("1ri")
+    end
+
+    it "tests" do
+      test_code("1.0ri")
     end
   end
 
   describe "symbol" do
     it "tests" do
+      pending "flags, opening_loc, value_loc and closing_loc are not supported"
+
       test_code(":sym")
     end
   end
 
   describe "string" do
     it "tests" do
-      test_code("'str'")
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        "str"
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        'str'
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code("?a")
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        # frozen_string_literal: true
+        'str'
+      CODE
+    end
+  end
+
+  describe "xstring" do
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code("`xstr`")
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        # frozen_string_literal: true
+        `xstr`
+      CODE
     end
   end
 
@@ -84,7 +212,45 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "hash" do
     it "tests" do
+      pending "opening_loc and closing_loc of Hash are not supported"
+
+      test_code("{}")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc and location of AssocNode are not supported"
+
       test_code("{a: 1}")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc and location of AssocNode are not supported"
+
+      test_code("{:a => 1}")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc of AssocSplatNode are not supported"
+
+      test_code("{ **foo }")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc of AssocSplatNode are not supported"
+
+      test_code("{a: 1, **foo }")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc of AssocSplatNode are not supported"
+
+      test_code("{ **foo, b: 2}")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of Hash & operator_loc of AssocSplatNode are not supported"
+
+      test_code("{a: 1, **foo, b: 2}")
     end
   end
 
@@ -249,6 +415,8 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "constant with expr" do
     it "tests" do
+      pending "delimiter_loc and name_loc are not supported"
+
       test_code(<<~CODE)
         expr::A
       CODE
@@ -263,15 +431,33 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
+      pending "keyword_loc, lparen_loc and rparen_loc are not supported"
+
       test_code("super(1)")
     end
 
     it "tests" do
+      pending "keyword_loc, lparen_loc and rparen_loc are not supported"
+
       test_code("super 1 do end")
     end
 
     it "tests" do
+      pending "keyword_loc, lparen_loc and rparen_loc are not supported"
+
+      test_code("super 1 do 2 end")
+    end
+
+    it "tests" do
+      pending "keyword_loc, lparen_loc and rparen_loc are not supported"
+
       test_code("super(1) {}")
+    end
+
+    it "tests" do
+      pending "keyword_loc, lparen_loc and rparen_loc are not supported"
+
+      test_code("super(1) { 2 }")
     end
   end
 
@@ -282,6 +468,10 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
     it "tests" do
       test_code("super {  }")
+    end
+
+    it "tests" do
+      test_code("super { 1 }")
     end
   end
 
@@ -401,18 +591,33 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "iter" do
     it "tests" do
-      pending "opening_loc and closing_loc are not supported"
+      pending "opening_loc and closing_loc of BlockNode are not supported"
 
       test_code("3.times { foo = 1; foo }")
     end
 
     it "tests" do
-      pending "opening_loc and closing_loc are not supported"
+      pending "opening_loc and closing_loc of BlockNode are not supported"
 
       test_code(<<~CODE)
         3.times do
           foo = 1
           foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockNode are not supported"
+
+      test_code("3.times {  }")
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockNode are not supported"
+
+      test_code(<<~CODE)
+        3.times do
         end
       CODE
     end
@@ -426,6 +631,28 @@ RSpec.describe "basic test cases return same nodes with prism" do
         3.times do |i|
           foo = 1
           foo
+        end
+      CODE
+    end
+
+    # BlockParameters
+    it "tests" do
+      test_code(<<~CODE)
+        3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk|
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        3.times do |i, j, k = 0, l, m: 1, n:, **h, &blk|
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        3.times do |i, j, k = 0, (l, m), n: 1, o:, **h, &blk|
         end
       CODE
     end
@@ -582,6 +809,104 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "while" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        while x == 1 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        while x == 1
+          foo
+        end
+      CODE
+    end
+  end
+
+  describe "modifier while" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("foo while true")
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("begin foo end while true")
+    end
+  end
+
+  describe "until" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        until x == 1 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        until x == 1
+          foo
+        end
+      CODE
+    end
+  end
+
+  describe "modifier until" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("foo until true")
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("begin foo end until true")
+    end
+  end
+
+  describe "flip-flap" do
+    it "tests" do
+      pending "IfNode and StringNode need to support locations"
+
+      test_code("if 'a'..'z'; foo; end")
+    end
+
+    it "tests" do
+      pending "IfNode and StringNode need to support locations"
+
+      test_code("if 'a'...'z'; foo; end")
+    end
+
+    it "tests for integer range" do
+      pending "Need to remove special treatment for IntegerNode flip-flap. See: range_op"
+
+      test_code("if 1..5; foo; end")
+    end
+
+    it "tests for integer range" do
+      pending "Need to remove special treatment for IntegerNode flip-flap. See: range_op"
+
+      test_code("if 1...5; foo; end")
+    end
+  end
+
   describe "alias" do
     it "tests" do
       test_code("alias bar foo")
@@ -636,7 +961,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "return" do
     it "tests" do
-      pending "Need to keep RETURN NODE"
+      pending "redundant flags and keyword_loc are not supported"
 
       test_code(<<~CODE)
         def m
@@ -646,6 +971,8 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
+      pending "redundant flags and keyword_loc are not supported"
+
       test_code(<<~CODE)
         def m
           return 1
@@ -654,9 +981,171 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
+      pending "redundant flags and keyword_loc are not supported"
+
       test_code(<<~CODE)
         def m
           return 1, 2
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "keyword_loc is not supported"
+
+      test_code(<<~CODE)
+        def m
+          return 1, 2 if a
+          3
+        end
+      CODE
+    end
+  end
+
+  describe "begin, rescue, else, ensure" do
+    it "tests" do
+      pending "begin_keyword_loc and end_keyword_loc are not supported"
+
+      test_code(<<~CODE)
+        begin
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "Need to keep BEGIN node"
+
+      test_code(<<~CODE)
+        begin
+          1
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+        rescue
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue StandardError
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue StandardError => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue ArgumentError => e
+          2
+        rescue ArgumentError => @e
+          3
+        rescue ArgumentError => @@e
+          4
+        rescue ArgumentError => $e
+          5
+        rescue ArgumentError => E
+          6
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        e = 0
+
+        1.times do
+          begin
+            1
+          rescue NoMethodError => e
+            2
+          end
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue NoMethodError, ArgumentError => e
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+        rescue
+        else
+        ensure
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        begin
+          1
+        rescue
+          2
+        else
+          3
+        ensure
+          4
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        def m
+          1
+        rescue
+          2
+        else
+          3
+        ensure
+          4
         end
       CODE
     end
@@ -667,9 +1156,14 @@ RSpec.describe "basic test cases return same nodes with prism" do
       test_code(<<~CODE)
         case x
         when 1
-          :a
-        when 2, 3
-          :b
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        case x
+        when 1 then
         end
       CODE
     end
@@ -678,6 +1172,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       test_code(<<~CODE)
         case x
         when 1
+          :a
+        when 2, 3
+          :b
         end
       CODE
     end
@@ -727,6 +1224,26 @@ RSpec.describe "basic test cases return same nodes with prism" do
           :c
         end
       CODE
+    end
+  end
+
+  describe "parentheses" do
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("()")
+    end
+
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("(1)")
+    end
+
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("((1))")
     end
   end
 
