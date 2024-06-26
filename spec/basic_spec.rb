@@ -273,7 +273,15 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
+      test_code("super 1 do 2 end")
+    end
+
+    it "tests" do
       test_code("super(1) {}")
+    end
+
+    it "tests" do
+      test_code("super(1) { 2 }")
     end
   end
 
@@ -284,6 +292,10 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
     it "tests" do
       test_code("super {  }")
+    end
+
+    it "tests" do
+      test_code("super { 1 }")
     end
   end
 
@@ -418,6 +430,18 @@ RSpec.describe "basic test cases return same nodes with prism" do
         end
       CODE
     end
+
+    it "tests" do
+      test_code("3.times {  }")
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        3.times do
+        end
+      CODE
+    end
+
 
     it "tests" do
       test_code("3.times { |i| foo = 1; foo }")
@@ -581,6 +605,78 @@ RSpec.describe "basic test cases return same nodes with prism" do
       pending "if_keyword_loc, then_keyword_loc and end_keyword_loc are not supported"
 
       test_code("1 unless true")
+    end
+  end
+
+  describe "while" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        while x == 1 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        while x == 1
+          foo
+        end
+      CODE
+    end
+  end
+
+  describe "modifier while" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("foo while true")
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("begin foo end while true")
+    end
+  end
+
+  describe "until" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        until x == 1 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        until x == 1
+          foo
+        end
+      CODE
+    end
+  end
+
+  describe "modifier until" do
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("foo until true")
+    end
+
+    it "tests" do
+      pending "keyword_loc and closing_loc are not supported"
+
+      test_code("begin foo end until true")
     end
   end
 

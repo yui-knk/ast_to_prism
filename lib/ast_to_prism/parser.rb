@@ -335,9 +335,41 @@ module AstToPrism
       when :IN
         not_supported(node)
       when :WHILE
-        not_supported(node)
+        nd_cond, nd_body, nd_state = node.children
+
+        if nd_state
+          flags = 0
+        else
+          flags = Prism::LoopFlags::BEGIN_MODIFIER
+        end
+
+        Prism::WhileNode.new(
+          source,                 # source
+          flags,                  # flags
+          null_location,          # keyword_loc
+          null_location,          # closing_loc
+          convert_node(nd_cond),  # predicate
+          convert_stmts(nd_body), # statements
+          location(node)          # location
+        )
       when :UNTIL
-        not_supported(node)
+        nd_cond, nd_body, nd_state = node.children
+
+        if nd_state
+          flags = 0
+        else
+          flags = Prism::LoopFlags::BEGIN_MODIFIER
+        end
+
+        Prism::UntilNode.new(
+          source,                 # source
+          flags,                  # flags
+          null_location,          # keyword_loc
+          null_location,          # closing_loc
+          convert_node(nd_cond),  # predicate
+          convert_stmts(nd_body), # statements
+          location(node)          # location
+        )
       when :ITER
         # example: 3.times { foo }
 
@@ -647,15 +679,21 @@ module AstToPrism
           location(node)    # location
         )
       when :SUPER
-        # TODO: Need to take care of block like `super(1) {}`
-
-        # (source, keyword_loc, lparen_loc, arguments, rparen_loc, block, location)
-        Prism::SuperNode.new(source, null_location, null_location, convert_arguments(node.children[0]), null_location, nil, location(node))
+        Prism::SuperNode.new(
+          source,                              # source
+          null_location,                       # keyword_loc
+          null_location,                       # lparen_loc
+          convert_arguments(node.children[0]), # arguments
+          null_location,                       # rparen_loc
+          block,                               # block
+          location(node)                       # location
+        )
       when :ZSUPER
-        # TODO: Need to take care of block like `super {}`
-
-        # (source, block, location)
-        Prism::ForwardingSuperNode.new(source, nil, location(node))
+        Prism::ForwardingSuperNode.new(
+          source,        # source
+          block,         # block
+          location(node) # location
+        )
       when :LIST
         # TODO: node.children should not include last nil
         ary = node.children[0...-1].map do |n|
