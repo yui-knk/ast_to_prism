@@ -403,7 +403,16 @@ module AstToPrism
       when :NEXT
         not_supported(node)
       when :RETURN
-        not_supported(node)
+        nd_stts, = node.children
+        flags = 0
+
+        Prism::ReturnNode.new(
+          source,                # source
+          flags,                 # flags
+          null_location,         # keyword_loc
+          convert_stts(nd_stts), # arguments
+          location(node)         # location
+        )
       when :REDO
         not_supported(node)
       when :RETRY
@@ -753,22 +762,105 @@ module AstToPrism
       when :MATCH3
         not_supported(node)
       when :STR
-        not_supported(node)
+        string, = node.children
+        flags = 0
+
+        Prism::StringNode.new(
+          source,         # source
+          flags,          # flags
+          null_location,  # opening_loc
+          null_location,  # content_loc
+          null_location,  # closing_loc
+          string,         # unescaped
+          location(node), # location
+        )
       when :XSTR
-        not_supported(node)
+        string, = node.children
+        flags = 0
+
+        Prism::XStringNode.new(
+          source,         # source
+          flags,          # flags
+          null_location,  # opening_loc
+          null_location,  # content_loc
+          null_location,  # closing_loc
+          string,         # unescaped
+          location(node), # location
+        )
       when :INTEGER
+        val, = node.children
         # TODO: Need to expose `base` for flags
-        # (source, flags, value, location)
-        Prism::IntegerNode.new(source, IntegerBaseFlags::DECIMAL, node.children[0], location(node))
+        flags = IntegerBaseFlags::DECIMAL
+
+        Prism::IntegerNode.new(
+          source,        # source
+          flags,         # flags
+          val,           # value
+          location(node) # location
+        )
       when :FLOAT
-        # (source, value, location)
-        Prism::FloatNode.new(source, node.children[0], location(node))
+        val, = node.children
+
+        Prism::FloatNode.new(
+          source,        # source
+          val,           # value
+          location(node) # location
+        )
       when :RATIONAL
-        # (source, flags, numerator, denominator, location)
-        not_supported(node)
+        val, = node.children
+        # TODO: Need to expose `base` for flags
+        flags = IntegerBaseFlags::DECIMAL
+
+        Prism::RationalNode.new(
+          source,          # source
+          flags,           # flags
+          val.numerator,   # numerator
+          val.denominator, # denominator
+          location(node)   # location
+        )
       when :IMAGINARY
-        # (source, numeric, location)
-        not_supported(node)
+        # TODO: Original Node should have val as Node.
+
+        val, = node.children
+        img = val.imaginary
+
+        case img
+        when Integer
+          # TODO: Need to expose `base` for flags
+          flags = IntegerBaseFlags::DECIMAL
+
+          numeric = Prism::IntegerNode.new(
+            source,        # source
+            flags,         # flags
+            img,           # value
+            location(node) # location
+          )
+        when Float
+          numeric = Prism::FloatNode.new(
+            source,        # source
+            img,           # value
+            location(node) # location
+          )
+        when Rational
+        # TODO: Need to expose `base` for flags
+        flags = IntegerBaseFlags::DECIMAL
+
+        numeric = Prism::RationalNode.new(
+          source,          # source
+          flags,           # flags
+          img.numerator,   # numerator
+          img.denominator, # denominator
+          location(node)   # location
+        )
+        else
+          raise "#{img.class} is not supported for IMAGINARY Node val."
+        end
+
+        Prism::ImaginaryNode.new(
+          source,        # source
+          numeric,       # numeric
+          location(node) # location
+        )
       when :REGX
         not_supported(node)
       when :ONCE
@@ -933,9 +1025,27 @@ module AstToPrism
         # (source, flags, left, right, operator_loc, location)
         Prism::RangeNode.new(source, RangeFlags::EXCLUDE_END, convert_node(nd_beg), convert_node(nd_end), null_location, location(node))
       when :FLIP2
-        not_supported(node)
+        nd_beg, nd_end = node.children
+
+        Prism::FlipFlopNode.new(
+          source,               # source
+          0,                    # flags
+          convert_node(nd_beg), # left
+          convert_node(nd_end), # right
+          null_location,        # operator_loc
+          location(node)        # location
+        )
       when :FLIP3
-        not_supported(node)
+        nd_beg, nd_end = node.children
+
+        Prism::FlipFlopNode.new(
+          source,                  # source
+          RangeFlags::EXCLUDE_END, # flags
+          convert_node(nd_beg),    # left
+          convert_node(nd_end),    # right
+          null_location,           # operator_loc
+          location(node)           # location
+        )
       when :SELF
         # (source, location)
         Prism::SelfNode.new(source, location(node))

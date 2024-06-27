@@ -41,11 +41,43 @@ RSpec.describe "basic test cases return same nodes with prism" do
     it "tests" do
       test_code("1")
     end
+
+    it "tests" do
+      test_code("-1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0b1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("01")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0o1")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0x1")
+    end
   end
 
   describe "float" do
     it "tests" do
       test_code("1.2")
+    end
+
+    it "tests" do
+      test_code("-1.2")
     end
   end
 
@@ -53,13 +85,63 @@ RSpec.describe "basic test cases return same nodes with prism" do
     it "tests" do
       test_code("1r")
     end
+
+    it "tests" do
+      test_code("-1r")
+    end
+
+    it "tests" do
+      test_code("1.0r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0b1r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("01r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0o1r")
+    end
+
+    it "tests" do
+      pending "Need to expose `base` for flags"
+
+      test_code("0x1r")
+    end
+
+    it "tests" do
+      test_code("1.2r")
+    end
   end
 
   describe "imaginary" do
     it "tests" do
       test_code("1i")
+    end
+
+    it "tests" do
+      test_code("-1i")
+    end
+
+    it "tests" do
       test_code("1.0i")
+    end
+
+    it "tests" do
       test_code("1ri")
+    end
+
+    it "tests" do
+      test_code("1.0ri")
     end
   end
 
@@ -71,7 +153,51 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "string" do
     it "tests" do
-      test_code("'str'")
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        "str"
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        'str'
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code("?a")
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        # frozen_string_literal: true
+        'str'
+      CODE
+    end
+  end
+
+  describe "xstring" do
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code("`xstr`")
+    end
+
+    it "tests" do
+      pending "opening_loc, content_loc and closing_loc are not supported"
+
+      test_code(<<~CODE)
+        # frozen_string_literal: true
+        `xstr`
+      CODE
     end
   end
 
@@ -680,6 +806,32 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "flip-flap" do
+    it "tests" do
+      pending "IfNode and StringNode need to support locations"
+
+      test_code("if 'a'..'z'; foo; end")
+    end
+
+    it "tests" do
+      pending "IfNode and StringNode need to support locations"
+
+      test_code("if 'a'...'z'; foo; end")
+    end
+
+    it "tests for integer range" do
+      pending "Need to remove special treatment for IntegerNode flip-flap. See: range_op"
+
+      test_code("if 1..5; foo; end")
+    end
+
+    it "tests for integer range" do
+      pending "Need to remove special treatment for IntegerNode flip-flap. See: range_op"
+
+      test_code("if 1...5; foo; end")
+    end
+  end
+
   describe "alias" do
     it "tests" do
       test_code("alias bar foo")
@@ -754,6 +906,16 @@ RSpec.describe "basic test cases return same nodes with prism" do
     it "tests" do
       test_code(<<~CODE)
         def m
+          return 1, 2
+        end
+      CODE
+    end
+
+    it "tests" do
+      test_code(<<~CODE)
+        def m
+          if a
+            en
           return 1, 2
         end
       CODE
@@ -982,6 +1144,26 @@ RSpec.describe "basic test cases return same nodes with prism" do
           :c
         end
       CODE
+    end
+  end
+
+  describe "parentheses" do
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("()")
+    end
+
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("(1)")
+    end
+
+    it "tests" do
+      pending "Need to introduce ParenthesesNode"
+
+      test_code("((1))")
     end
   end
 
