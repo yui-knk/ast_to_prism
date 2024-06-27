@@ -498,7 +498,7 @@ module AstToPrism
       when :ENSURE
         nd_head, nd_ensr = node.children
 
-        # TODO: Change original NODE strucutre
+        # TODO: Change original NODE structure
         if nd_head.type == :RESCUE
           res_nd_head, res_nd_resq, res_nd_else = nd_head.children
 
