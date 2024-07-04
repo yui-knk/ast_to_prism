@@ -1,0 +1,34 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check-misc:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        ruby: ['head']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle install
+
+      # Copy from https://github.com/ruby/ruby/blob/cb9a47f2acd6e373ef868b890a9d07da6f565dd4/.github/workflows/check_misc.yml#L31
+      - name: Check if C-sources are US-ASCII
+        run: |
+          grep -r -n --include='*.[chyS]' --include='*.asm' $'[^\t-~]' -- . && exit 1 || :
+
+      # Copy from https://github.com/ruby/ruby/blob/089227e94823542acfdafa68541d330eee42ffea/.github/workflows/check_misc.yml#L27
+      - name: Check for trailing spaces
+        run: |
+          git grep -I -n '[  ]$' -- '*.rb' '*.[chy]' '*.rs' ':!spec/' && exit 1 || :
+          git grep -n '^[  ][  ]*$' -- '*.md' && exit 1 || :
+
