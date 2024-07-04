@@ -2,17 +2,6 @@
 
 module AstToPrism
   class Parser
-    module IntegerBaseFlags
-      BINARY      = 1 << 0
-      DECIMAL     = 1 << 1
-      OCTAL       = 1 << 2
-      HEXADECIMAL = 1 << 3
-    end
-
-    module RangeFlags
-      EXCLUDE_END = 1 << 0
-    end
-
     def initialize(source)
       @source = source
     end
@@ -850,7 +839,7 @@ module AstToPrism
       when :INTEGER
         val, = node.children
         # TODO: Need to expose `base` for flags
-        flags = IntegerBaseFlags::DECIMAL
+        flags = Prism::IntegerBaseFlags::DECIMAL
 
         Prism::IntegerNode.new(
           source,        # source
@@ -869,7 +858,7 @@ module AstToPrism
       when :RATIONAL
         val, = node.children
         # TODO: Need to expose `base` for flags
-        flags = IntegerBaseFlags::DECIMAL
+        flags = Prism::IntegerBaseFlags::DECIMAL
 
         Prism::RationalNode.new(
           source,          # source
@@ -887,7 +876,7 @@ module AstToPrism
         case img
         when Integer
           # TODO: Need to expose `base` for flags
-          flags = IntegerBaseFlags::DECIMAL
+          flags = Prism::IntegerBaseFlags::DECIMAL
 
           numeric = Prism::IntegerNode.new(
             source,        # source
@@ -903,7 +892,7 @@ module AstToPrism
           )
         when Rational
         # TODO: Need to expose `base` for flags
-        flags = IntegerBaseFlags::DECIMAL
+        flags = Prism::IntegerBaseFlags::DECIMAL
 
         numeric = Prism::RationalNode.new(
           source,          # source
@@ -1092,7 +1081,7 @@ module AstToPrism
         nd_beg, nd_end = node.children
 
         # (source, flags, left, right, operator_loc, location)
-        Prism::RangeNode.new(source, RangeFlags::EXCLUDE_END, convert_node(nd_beg), convert_node(nd_end), null_location, location(node))
+        Prism::RangeNode.new(source, Prism::RangeFlags::EXCLUDE_END, convert_node(nd_beg), convert_node(nd_end), null_location, location(node))
       when :FLIP2
         nd_beg, nd_end = node.children
 
@@ -1106,14 +1095,15 @@ module AstToPrism
         )
       when :FLIP3
         nd_beg, nd_end = node.children
+        flags = Prism::RangeFlags::EXCLUDE_END
 
         Prism::FlipFlopNode.new(
-          source,                  # source
-          RangeFlags::EXCLUDE_END, # flags
-          convert_node(nd_beg),    # left
-          convert_node(nd_end),    # right
-          null_location,           # operator_loc
-          location(node)           # location
+          source,               # source
+          flags,                # flags
+          convert_node(nd_beg), # left
+          convert_node(nd_end), # right
+          null_location,        # operator_loc
+          location(node)        # location
         )
       when :SELF
         # (source, location)
