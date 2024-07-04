@@ -129,7 +129,7 @@ module AstToPrism
       end
     end
 
-    # TODO: Implment this method
+    # TODO: Implement this method
     def convert_block_parameters(nd_args)
       return nil if nd_args.nil?
     end
@@ -527,7 +527,7 @@ module AstToPrism
           exceptions = []
         end
 
-        # TODO: Change orignal node structures and extract ERRINFO info
+        # TODO: Change original node structures and extract ERRINFO info
         if errinfo_assign?(nd_body) # `rescue Err => e` or not
           reference = convert_errinfo_assignment(nd_body.children[0])
           statements = convert_stmts(nd_body, 1..-1)
@@ -549,7 +549,7 @@ module AstToPrism
       when :ENSURE
         nd_head, nd_ensr = node.children
 
-        # TODO: Change original NODE strucutre
+        # TODO: Change original NODE structure
         if nd_head.type == :RESCUE
           res_nd_head, res_nd_resq, res_nd_else = nd_head.children
 
