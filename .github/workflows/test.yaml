@@ -8,6 +8,20 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['head']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle install
+      - run: bundle exec rspec
   check-misc:
     runs-on: ubuntu-20.04
     strategy:
