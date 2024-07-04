@@ -527,7 +527,7 @@ module AstToPrism
           exceptions = []
         end
 
-        # TODO: Change orignal node structures and extract ERRINFO info
+        # TODO: Change original node structures and extract ERRINFO info
         if errinfo_assign?(nd_body) # `rescue Err => e` or not
           reference = convert_errinfo_assignment(nd_body.children[0])
           statements = convert_stmts(nd_body, 1..-1)
