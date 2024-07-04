@@ -129,7 +129,7 @@ module AstToPrism
       end
     end
 
-    # TODO: Implment this method
+    # TODO: Implement this method
     def convert_block_parameters(nd_args)
       return nil if nd_args.nil?
     end
