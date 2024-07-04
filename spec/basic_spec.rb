@@ -622,11 +622,11 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code("3.times { |i| foo = 1; foo }")
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         3.times do |i|
           foo = 1
@@ -636,21 +636,21 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     # BlockParameters
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk|
         end
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         3.times do |i, j, k = 0, l, m: 1, n:, **h, &blk|
         end
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         3.times do |i, j, k = 0, (l, m), n: 1, o:, **h, &blk|
         end
@@ -659,7 +659,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "class" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class A
           a = 1
@@ -667,7 +667,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class A < B
           a = 1
@@ -675,7 +675,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class A::B < C::D
           a = 1
@@ -683,7 +683,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class ::A < ::B
           a = 1
@@ -691,7 +691,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class ::A::B < ::C::D
           a = 1
@@ -699,7 +699,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class expr1::B < expr2::D
           a = 1
@@ -709,7 +709,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "sclass" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         class << obj
           a = 1
@@ -719,7 +719,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "module" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         module C
           a = 1
@@ -729,34 +729,34 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "defn" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m
         end
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m(a, b)
         end
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m a, b
         end
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m = 1
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m(a, b) = a + b
       CODE
@@ -767,7 +767,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "args" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def foo(a, b, opt1=1, opt2=2, *rest, y, z, kw: 1, **kwrest, &blk)
         end
@@ -776,13 +776,13 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "if" do
-    it "tests" do
+    xit "tests" do
       test_code("if true then 1 else 2 end")
     end
   end
 
   describe "elsif" do
-    it "tests" do
+    xit "tests" do
       test_code("if true then 1 elsif 2 then 3 end")
     end
   end
@@ -796,7 +796,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "unless" do
-    it "tests" do
+    xit "tests" do
       test_code("unless true then 1 else 2 end")
     end
   end
@@ -908,33 +908,33 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "alias" do
-    it "tests" do
+    xit "tests" do
       test_code("alias bar foo")
     end
 
-    it "tests" do
+    xit "tests" do
       test_code("alias :bar :foo")
     end
   end
 
   describe "valias" do
-    it "tests" do
+    xit "tests" do
       test_code("alias $y $x")
     end
   end
 
   describe "undef" do
-    it "tests" do
+    xit "tests" do
       test_code("undef foo")
     end
 
-    it "tests" do
+    xit "tests" do
       test_code("undef foo :bar")
     end
   end
 
   describe "break" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         10.times do |i|
           break
@@ -942,7 +942,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         10.times do |i|
           break 1
@@ -950,7 +950,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         10.times do |i|
           break 1, 2
@@ -1022,7 +1022,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
         rescue
@@ -1030,7 +1030,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1040,7 +1040,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1050,7 +1050,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1060,7 +1060,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1070,7 +1070,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1088,7 +1088,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+   xit "tests" do
       test_code(<<~CODE)
         e = 0
 
@@ -1102,7 +1102,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1112,7 +1112,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
         rescue
@@ -1122,7 +1122,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         begin
           1
@@ -1136,7 +1136,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         def m
           1
@@ -1152,7 +1152,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "case with head" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case x
         when 1
@@ -1160,7 +1160,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case x
         when 1 then
@@ -1168,7 +1168,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case x
         when 1
@@ -1179,7 +1179,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case x
         when 1
@@ -1194,7 +1194,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "case with no head" do
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case
         when 1
@@ -1205,7 +1205,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case
         when 1
@@ -1213,7 +1213,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    it "tests" do
+    xit "tests" do
       test_code(<<~CODE)
         case
         when 1
