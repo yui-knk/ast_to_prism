@@ -264,6 +264,81 @@ module Prism
       end
     }
   end
+
+  class BlockParametersNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
+  class OptionalParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class RestParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class RequiredKeywordParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc
+      end
+    }
+  end
+
+  class OptionalKeywordParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc
+      end
+    }
+  end
+
+  class KeywordRestParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class BlockParameterNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
 end
 
 require "simplecov"

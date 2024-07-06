@@ -118,9 +118,357 @@ module AstToPrism
       end
     end
 
-    # TODO: Implement this method
-    def convert_block_parameters(nd_args)
+    # For block_parameters
+    def convert_multiple_assignment(node)
+      if node.type != :MASGN
+        raise "MASGN NODE is expected but it's #{node.type} node."
+      end
+
+      nd_value, nd_head, nd_args = node.children
+      lefts = []
+      rest = nil
+      rights = []
+
+      if nd_head
+        if nd_head.type != :LIST
+          raise "LIST NODE is expected but it's #{node.type} node."
+        end
+
+        # TODO: node.children should not include last nil
+        lefts = nd_head.children[0...-1].map do |node|
+          if node.type != :DASGN
+            raise "DASGN NODE is expected but it's #{node.type} node."
+          end
+
+          nd_vid, nd_value = node.children
+
+          Prism::RequiredParameterNode.new(
+            source,       # source
+            0,            # flags
+            nd_vid,       # name
+            null_location # location
+          )
+        end
+      end
+
+      if nd_args
+        if nd_args == :NODE_SPECIAL_NO_NAME_REST
+          expression = nil
+
+          rest = Prism::SplatNode.new(
+            source,        # source
+            null_location, # operator_loc
+            expression,    # expression
+            null_location  # location
+          )
+        else
+          # NODE
+          case nd_args.type
+          when :DASGN
+            nd_vid, nd_value = nd_args.children
+
+            expression = Prism::RequiredParameterNode.new(
+              source,       # source
+              0,            # flags
+              nd_vid,       # name
+              null_location # location
+            )
+
+            # NOTE: Is this actually expression?
+            #       I guess SplatNode represents both parameters and arguments.
+            rest = Prism::SplatNode.new(
+              source,        # source
+              null_location, # operator_loc
+              expression,    # expression
+              null_location  # location
+            )
+          when :POSTARG
+            nd_1st, nd_2nd = nd_args.children
+
+            if nd_1st == :NODE_SPECIAL_NO_NAME_REST
+              expression = nil
+
+              rest = Prism::SplatNode.new(
+                source,        # source
+                null_location, # operator_loc
+                expression,    # expression
+                null_location  # location
+              )
+            else
+              if nd_1st.type != :DASGN
+                raise "DASGN node is expected but it's #{nd_1st.type} node."
+              end
+
+              nd_vid, nd_value = nd_1st.children
+
+              expression = Prism::RequiredParameterNode.new(
+                source,       # source
+                0,            # flags
+                nd_vid,       # name
+                null_location # location
+              )
+
+              rest = Prism::SplatNode.new(
+                source,        # source
+                null_location, # operator_loc
+                expression,    # expression
+                null_location  # location
+              )
+            end
+
+            # TODO: Share the logic with lefts.
+            if nd_2nd.type != :LIST
+              raise "LIST NODE is expected but it's #{nd_2nd.type} node."
+            end
+
+            # TODO: node.children should not include last nil
+            rights = nd_2nd.children[0...-1].map do |node|
+              if node.type != :DASGN
+                raise "DASGN NODE is expected but it's #{node.type} node."
+              end
+
+              nd_vid, nd_value = node.children
+
+              Prism::RequiredParameterNode.new(
+                source,       # source
+                0,            # flags
+                nd_vid,       # name
+                null_location # location
+              )
+            end
+          else
+            raise "DASGN or POSTARG nodes are expected but it's #{nd_args.type} node."
+          end
+        end
+      end
+
+      result = Prism::MultiTargetNode.new(
+        source,        # source
+        lefts,         # lefts
+        rest,          # rest
+        rights,        # rights
+        null_location, # lparen_loc
+        null_location, # rparen_loc
+        location(node) # location
+      )
+
+      count = lefts.count + (rest ? 1 : 0) + rights.count
+
+      return result, count
+    end
+
+    def convert_block_parameters(locals, nd_args)
       return nil if nd_args.nil?
+
+      pre_num, pre_init, opt, first_post, post_num, post_init, rest, kw, kwrest, block = nd_args.children
+
+      requireds = []
+      optionals = []
+      rest_node = nil
+      posts = []
+      keywords = []
+      keyword_rest = nil
+      block_node = nil
+      local_nodes = []
+      index = 0
+
+      pre_num.times do |i|
+        # TODO: Remove "internal variable" from original nodes.
+        #       E.g. `3.times do |(*i)| end`.
+        #       nd_tbl and pre_init include "internal variable" which is
+        #       represented as `nil`.
+        if locals[i]
+          requireds << Prism::RequiredParameterNode.new(
+            source,       # source
+            0,            # flags
+            locals[i],    # name
+            null_location # location
+          )
+        end
+
+        index += 1
+      end
+
+      if pre_init
+        result, count = convert_multiple_assignment(pre_init)
+        requireds << result
+        index += count
+      end
+
+      opt_arg = opt
+      while opt_arg do
+        nd_body, nd_next = opt_arg.children
+
+        if nd_body.type != :DASGN
+          raise "DASGN NODE is expected but it's #{node.type} node."
+        end
+
+        nd_vid, nd_value = nd_body.children
+
+        optionals << Prism::OptionalParameterNode.new(
+          source,                 # source
+          0,                      # flags
+          nd_vid,                 # name
+          null_location,          # name_loc
+          null_location,          # operator_loc
+          convert_node(nd_value), # value
+          null_location           # location
+        )
+
+        index += 1
+        opt_arg = nd_next
+      end
+
+      if rest
+        if rest == :NODE_SPECIAL_EXCESSIVE_COMMA
+          rest_node = Prism::ImplicitRestNode.new(
+            source,        # source
+            null_location  # location
+          )
+        else
+          rest_node = Prism::RestParameterNode.new(
+            source,        # source
+            0,             # flags
+            rest,          # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            null_location  # location
+          )
+        end
+
+        index += 1
+      end
+
+      post_num.times do |i|
+        # TODO: Remove "internal variable" from original nodes.
+        #       E.g. `3.times do |(*i)| end`.
+        #       nd_tbl and pre_init include "internal variable" which is
+        #       represented as `nil`.
+        if locals[index]
+          posts << Prism::RequiredParameterNode.new(
+            source,        # source
+            0,             # flags
+            locals[index], # name
+            null_location  # location
+          )
+        end
+
+        index += 1
+      end
+
+      if post_init
+        result, count = convert_multiple_assignment(post_init)
+        posts << result
+        index += count
+      end
+
+      if kw
+        kw_arg = kw
+        while kw_arg do
+          nd_body, nd_next = kw_arg.children
+
+          if nd_body.type != :DASGN
+            raise "DASGN NODE is expected but it's #{node.type} node."
+          end
+
+          nd_vid, nd_value = nd_body.children
+
+          if nd_value == :NODE_SPECIAL_REQUIRED_KEYWORD
+            keywords << Prism::RequiredKeywordParameterNode.new(
+              source,                 # source
+              0,                      # flags
+              nd_vid,                 # name
+              null_location,          # name_loc
+              null_location           # location
+            )
+          else
+            keywords << Prism::OptionalKeywordParameterNode.new(
+              source,                 # source
+              0,                      # flags
+              nd_vid,                 # name
+              null_location,          # name_loc
+              convert_node(nd_value), # value
+              null_location           # location
+            )
+          end
+
+          index += 1
+          kw_arg = nd_next
+        end
+      end
+
+      # Skip "internal variable" for kw
+      #
+      # TODO: Remove this logic
+      if locals[index].nil?
+        index += 1
+      end
+
+      if kwrest
+        if kwrest.type != :DVAR
+          raise "DVAR NODE is expected but it's #{node.type} node."
+        end
+
+        nd_vid, = kwrest.children
+
+        if nd_vid
+          keyword_rest = Prism::KeywordRestParameterNode.new(
+            source,        # source
+            0,             # flags
+            nd_vid,        # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            null_location  # location
+          )
+
+          index += 1
+        end
+      end
+
+      if block
+        block_node = Prism::BlockParameterNode.new(
+          source,        # source
+          0,             # flags
+          block,         # name
+          null_location, # name_loc
+          null_location, # operator_loc
+          null_location  # location
+        )
+
+        index += 1
+      end
+
+      parameters = Prism::ParametersNode.new(
+        source,           # source
+        requireds,        # requireds
+        optionals,        # optionals
+        rest_node,        # rest
+        posts,            # posts
+        keywords,         # keywords
+        keyword_rest,     # keyword_rest
+        block_node,       # block
+        location(nd_args) # location
+      )
+
+      if index < locals.count
+        local_nodes = locals[index..].map do |local|
+          Prism::BlockLocalVariableNode.new(
+            source,        # source
+            0,             # flags
+            local,         # name
+            null_location, # location
+          )
+        end
+      end
+
+      Prism::BlockParametersNode.new(
+        source,           # source
+        parameters,       # parameters
+        local_nodes,      # locals
+        null_location,    # opening_loc
+        null_location,    # closing_loc
+        location(nd_args) # location
+      )
     end
 
     def convert_stts(node)
@@ -197,14 +545,16 @@ module AstToPrism
 
       locals, args, body = node.children
 
+      # TODO: `locals.compact` is needed to remove "internal variable"
+      #       E.g. `3.times do |(*i)| end`.
       Prism::BlockNode.new(
-        source,                         # source
-        locals,                         # locals
-        convert_block_parameters(args), # parameters
-        convert_block_body(body),       # body
-        null_location,                  # opening_loc
-        null_location,                  # closing_loc
-        location(node)                  # location
+        source,                                 # source
+        locals.compact,                         # locals
+        convert_block_parameters(locals, args), # parameters
+        convert_block_body(body),               # body
+        null_location,                          # opening_loc
+        null_location,                          # closing_loc
+        location(node)                          # location
       )
     end
 
