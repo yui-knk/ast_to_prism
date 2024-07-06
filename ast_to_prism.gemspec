@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"]     = "#{spec.homepage}/releases"
   spec.metadata["bug_tracker_uri"]   = "#{spec.homepage}/issues"
 
-  spec.add_runtime_dependency "prism"
+  spec.add_runtime_dependency "prism", "0.30.0"
 
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
