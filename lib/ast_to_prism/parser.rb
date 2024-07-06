@@ -14,6 +14,12 @@ module AstToPrism
 
     private
 
+    def check_node_type(node, *types)
+      if !types.include?(node.type)
+        raise "#{types.join(", ")} is/are expected but it's #{node.type} node."
+      end
+    end
+
     def _location(start_offset, length)
       Prism::Location.new(source, start_offset, length)
     end
@@ -52,9 +58,7 @@ module AstToPrism
     end
 
     def convert(node)
-      if node.type != :SCOPE
-        raise "SCOPE NODE is expected but it's #{node.type} node."
-      end
+      check_node_type(node, :SCOPE)
 
       locals, args, body = node.children
       # (source, locals, statements, location)
@@ -120,9 +124,7 @@ module AstToPrism
 
     # For block_parameters
     def convert_multiple_assignment(node)
-      if node.type != :MASGN
-        raise "MASGN NODE is expected but it's #{node.type} node."
-      end
+      check_node_type(node, :MASGN)
 
       nd_value, nd_head, nd_args = node.children
       lefts = []
@@ -130,15 +132,11 @@ module AstToPrism
       rights = []
 
       if nd_head
-        if nd_head.type != :LIST
-          raise "LIST NODE is expected but it's #{node.type} node."
-        end
+        check_node_type(nd_head, :LIST)
 
         # TODO: node.children should not include last nil
         lefts = nd_head.children[0...-1].map do |node|
-          if node.type != :DASGN
-            raise "DASGN NODE is expected but it's #{node.type} node."
-          end
+          check_node_type(node, :DASGN)
 
           nd_vid, nd_value = node.children
 
@@ -195,9 +193,7 @@ module AstToPrism
                 null_location  # location
               )
             else
-              if nd_1st.type != :DASGN
-                raise "DASGN node is expected but it's #{nd_1st.type} node."
-              end
+              check_node_type(nd_1st, :DASGN)
 
               nd_vid, nd_value = nd_1st.children
 
@@ -217,15 +213,11 @@ module AstToPrism
             end
 
             # TODO: Share the logic with lefts.
-            if nd_2nd.type != :LIST
-              raise "LIST NODE is expected but it's #{nd_2nd.type} node."
-            end
+            check_node_type(nd_2nd, :LIST)
 
             # TODO: node.children should not include last nil
             rights = nd_2nd.children[0...-1].map do |node|
-              if node.type != :DASGN
-                raise "DASGN NODE is expected but it's #{node.type} node."
-              end
+              check_node_type(node, :DASGN)
 
               nd_vid, nd_value = node.children
 
@@ -299,9 +291,7 @@ module AstToPrism
       while opt_arg do
         nd_body, nd_next = opt_arg.children
 
-        if nd_body.type != :DASGN
-          raise "DASGN NODE is expected but it's #{node.type} node."
-        end
+        check_node_type(nd_body, :DASGN)
 
         nd_vid, nd_value = nd_body.children
 
@@ -367,9 +357,7 @@ module AstToPrism
         while kw_arg do
           nd_body, nd_next = kw_arg.children
 
-          if nd_body.type != :DASGN
-            raise "DASGN NODE is expected but it's #{node.type} node."
-          end
+          check_node_type(nd_body, :DASGN)
 
           nd_vid, nd_value = nd_body.children
 
@@ -405,9 +393,7 @@ module AstToPrism
       end
 
       if kwrest
-        if kwrest.type != :DVAR
-          raise "DVAR NODE is expected but it's #{node.type} node."
-        end
+        check_node_type(kwrest, :DVAR)
 
         nd_vid, = kwrest.children
 
@@ -539,9 +525,7 @@ module AstToPrism
     def convert_block(node)
       return nil if node.nil?
 
-      if node.type != :SCOPE
-        raise "SCOPE NODE is expected but it's #{node.type} node."
-      end
+      check_node_type(node, :SCOPE)
 
       locals, args, body = node.children
 
@@ -559,9 +543,7 @@ module AstToPrism
     end
 
     def get_nd_tbl(node)
-      if node.type != :SCOPE
-        raise "SCOPE NODE is expected but it's #{node.type} node."
-      end
+      check_node_type(node, :SCOPE)
 
       locals, args, body = node.children
 
@@ -1376,9 +1358,7 @@ module AstToPrism
 
         nd_cpath, nd_super, nd_body = node.children
 
-        if nd_body.type != :SCOPE
-          raise "SCOPE NODE is expected but it's #{node.type} node."
-        end
+        check_node_type(nd_body, :SCOPE)
 
         locals = get_nd_tbl(nd_body)
         _, _, scope_nd_body = nd_body.children
