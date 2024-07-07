@@ -672,6 +672,63 @@ module AstToPrism
       end
     end
 
+    def convert_for_args(node)
+      check_node_type(node, :ARGS)
+
+      pre_num, pre_init, opt, first_post, post_num, post_init, rest, kw, kwrest, block = node.children
+
+      case [pre_num, opt, first_post, post_num, post_init, rest, kw, kwrest, block]
+      when [1, nil, nil, 0, nil, nil, nil, nil, nil]
+        check_node_type(pre_init, :LASGN)
+
+        vid, value = pre_init.children
+
+        Prism::LocalVariableTargetNode.new(
+          source,            # source
+          vid,               # name
+          0,                 # depth
+          location(pre_init) # location
+        )
+      when [0, nil, nil, 0, nil, nil, nil, nil, nil]
+        check_node_type(pre_init, :MASGN)
+
+        nd_value, nd_head, nd_args = pre_init.children
+        lefts = []
+        rest = nil
+        rights = []
+
+        if nd_head
+          check_node_type(nd_head, :LIST)
+
+          # TODO: node.children should not include last nil
+          lefts = nd_head.children[0...-1].map do |node|
+            check_node_type(node, :LASGN)
+
+            nd_vid, nd_value = node.children
+
+            Prism::LocalVariableTargetNode.new(
+              source,        # source
+              nd_vid,        # name
+              0,             # depth
+              location(node) # location
+            )
+          end
+        end
+
+        Prism::MultiTargetNode.new(
+          source,        # source
+          lefts,         # lefts
+          rest,          # rest
+          rights,        # rights
+          null_location, # lparen_loc
+          null_location, # rparen_loc
+          location(node) # location
+        )
+      else
+        raise "#{nd_args} has not expected format."
+      end
+    end
+
     def convert_node(node, block: nil)
       return nil if node.nil?
 
@@ -825,7 +882,23 @@ module AstToPrism
         block = convert_block(nd_body)
         iter = convert_node(nd_iter, block: block)
       when :FOR
-        not_supported(node)
+        nd_iter, nd_body = node.children
+
+        check_node_type(nd_body, :SCOPE)
+        nd_tbl, nd_args, nd_body2 = nd_body.children
+        index = convert_for_args(nd_args)
+
+        Prism::ForNode.new(
+          source,                  # source
+          index,                   # index
+          convert_node(nd_iter),   # collection
+          convert_stmts(nd_body2), # statements
+          null_location,           # for_keyword_loc
+          null_location,           # in_keyword_loc
+          null_location,           # do_keyword_loc
+          null_location,           # end_keyword_loc
+          location(node)           # location
+        )
       when :FOR_MASGN
         not_supported(node)
       when :BREAK
