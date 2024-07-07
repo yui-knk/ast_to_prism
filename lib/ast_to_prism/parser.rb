@@ -684,15 +684,36 @@ module AstToPrism
         # (source, body, location)
         Prism::StatementsNode.new(source, body, location(node))
       when :IF
+        # NODE: We might need ElsifNode node otherwise both outer and inner IfNode(s)
+        #       has end_keyword_loc for the same "end" token
         nd_cond, nd_body, nd_else = node.children
+        consequent = nil
 
-        # (source, if_keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location)
-        #
+        if nd_else
+          if nd_else.type == :IF
+            consequent = convert_node(nd_else)
+          else
+            consequent = Prism::ElseNode.new(
+              source,                 # source
+              null_location,          # else_keyword_loc
+              convert_stmts(nd_else), # statements
+              null_location,          # end_keyword_loc
+              location(nd_else)       # location
+            )
+          end
+        end
+
         # NOTE: predicate is not always StatementsNode.
-        Prism::IfNode.new(source,
-                          null_location, convert_node(nd_cond),
-                          null_location, convert_stmts(nd_body), convert_node(nd_else),
-                          null_location, location(node))
+        Prism::IfNode.new(
+          source,                 # source
+          null_location,          # if_keyword_loc
+          convert_node(nd_cond),  # predicate
+          null_location,          # then_keyword_loc
+          convert_stmts(nd_body), # statements
+          consequent,             # consequent
+          null_location,          # end_keyword_loc
+          location(node)          # location
+        )
       when :UNLESS
         nd_cond, nd_body, nd_else = node.children
 

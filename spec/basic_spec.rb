@@ -1255,14 +1255,68 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "if" do
-    xit "tests" do
-      test_code("if true then 1 else 2 end")
+    it "tests" do
+      pending "IfNode locations are not supported"
+
+      test_code(<<~CODE)
+        if true
+          1
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "IfNode locations are not supported"
+
+      test_code(<<~CODE)
+        if true
+          1
+        else
+          2
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "IfNode locations are not supported"
+
+      test_code(<<~CODE)
+        if true then
+          1
+        else
+          2
+        end
+      CODE
     end
   end
 
   describe "elsif" do
-    xit "tests" do
-      test_code("if true then 1 elsif 2 then 3 end")
+    it "tests" do
+      pending "IfNode locations are not supported"
+
+      test_code(<<~CODE)
+        if true
+          1
+        elsif false
+          2
+        else
+          3
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "IfNode locations are not supported"
+
+      test_code(<<~CODE)
+        if true then
+          1
+        elsif false then
+          2
+        else
+          3
+        end
+      CODE
     end
   end
 
