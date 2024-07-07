@@ -1480,8 +1480,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "begin, rescue, else, ensure" do
+    # begin
     it "tests" do
-      pending "begin_keyword_loc and end_keyword_loc are not supported"
+      pending "BeginNode locations are not supported"
 
       test_code(<<~CODE)
         begin
@@ -1499,7 +1500,10 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    # rescue
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
         rescue
@@ -1507,7 +1511,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1517,7 +1523,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1527,7 +1535,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1537,7 +1547,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1547,7 +1559,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1565,7 +1579,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-   xit "tests" do
+   it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         e = 0
 
@@ -1579,7 +1595,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1589,7 +1607,22 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    # else
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
+      test_code(<<~CODE)
+        begin
+        rescue
+        else
+        end
+      CODE
+    end
+
+    # ensure
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
         rescue
@@ -1599,7 +1632,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
       test_code(<<~CODE)
         begin
           1
@@ -1613,6 +1648,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
+    # In method definition
     xit "tests" do
       test_code(<<~CODE)
         def m

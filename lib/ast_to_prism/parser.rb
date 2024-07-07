@@ -528,15 +528,18 @@ module AstToPrism
       return conditions, consequent
     end
 
-    def convert_block_body(node)
+    def convert_block_body(node, range = 0..-1)
+      return nil if node.nil?
+
       if node.type == :BEGIN && node.children == [nil]
         nil
       else
-        convert_stmts(node)
+        convert_stmts(node, range)
       end
     end
 
     alias :convert_case_statements :convert_block_body
+    alias :convert_begin_statements :convert_block_body
 
     def convert_block(node)
       return nil if node.nil?
@@ -829,39 +832,39 @@ module AstToPrism
         nd_body, = node.children
 
         Prism::BeginNode.new(
-          source,                 # source
-          null_location,          # begin_keyword_loc
-          convert_stmts(nd_body), # statements
-          nil,                    # rescue_clause
-          nil,                    # else_clause
-          nil,                    # ensure_clause
-          null_location,          # end_keyword_loc
-          location(node)          # location
+          source,                            # source
+          null_location,                     # begin_keyword_loc
+          convert_begin_statements(nd_body), # statements
+          nil,                               # rescue_clause
+          nil,                               # else_clause
+          nil,                               # ensure_clause
+          null_location,                     # end_keyword_loc
+          location(node)                     # location
         )
       when :RESCUE
         nd_head, nd_resq, nd_else  = node.children
 
         if nd_else
           else_clause = Prism::ElseNode.new(
-            source,                 # source
-            null_location,          # else_keyword_loc
-            convert_stmts(nd_else), # statements
-            null_location,          # end_keyword_loc
-            location(nd_else)       # location
+            source,                            # source
+            null_location,                     # else_keyword_loc
+            convert_begin_statements(nd_else), # statements
+            null_location,                     # end_keyword_loc
+            location(nd_else)                  # location
           )
         else
           else_clause = nil
         end
 
         Prism::BeginNode.new(
-          source,                 # source
-          null_location,          # begin_keyword_loc
-          convert_stmts(nd_head), # statements
-          convert_node(nd_resq),  # rescue_clause
-          else_clause,            # else_clause
-          nil,                    # ensure_clause
-          null_location,          # end_keyword_loc
-          location(node)          # location
+          source,                            # source
+          null_location,                     # begin_keyword_loc
+          convert_begin_statements(nd_head), # statements
+          convert_node(nd_resq),             # rescue_clause
+          else_clause,                       # else_clause
+          nil,                               # ensure_clause
+          null_location,                     # end_keyword_loc
+          location(node)                     # location
         )
       when :RESBODY
         nd_args, nd_body, nd_next  = node.children
@@ -877,10 +880,10 @@ module AstToPrism
         # TODO: Change original node structures and extract ERRINFO info
         if errinfo_assign?(nd_body) # `rescue Err => e` or not
           reference = convert_errinfo_assignment(nd_body.children[0])
-          statements = convert_stmts(nd_body, 1..-1)
+          statements = convert_begin_statements(nd_body, 1..-1)
         else
           reference = nil
-          statements = convert_stmts(nd_body)
+          statements = convert_begin_statements(nd_body)
         end
 
         Prism::RescueNode.new(
@@ -900,24 +903,39 @@ module AstToPrism
         if nd_head.type == :RESCUE
           res_nd_head, res_nd_resq, res_nd_else = nd_head.children
 
-          statements = convert_stmts(res_nd_head)
+          statements = convert_begin_statements(res_nd_head)
           rescue_clause = convert_node(res_nd_resq)
-          else_clause = convert_stmts(res_nd_else)
+          else_clause = Prism::ElseNode.new(
+            source,                                # source
+            null_location,                         # else_keyword_loc
+            convert_begin_statements(res_nd_else), # statements
+            null_location,                         # end_keyword_loc
+            location(res_nd_else)                  # location
+          )
+
         else
-          statements = convert_stmts(nd_head)
+          statements = convert_begin_statements(nd_head)
           rescue_clause = nil
           else_clause = nil
         end
 
+        ensure_clause = Prism::EnsureNode.new(
+          source,                            # source
+          null_location,                     # ensure_keyword_loc
+          convert_begin_statements(nd_ensr), # statements
+          null_location,                     # end_keyword_loc
+          location(nd_ensr)                  # location
+        )
+
         Prism::BeginNode.new(
-          source,                 # source
-          null_location,          # begin_keyword_loc
-          statements,             # statements
-          rescue_clause,          # rescue_clause
-          else_clause,            # else_clause
-          convert_stmts(nd_ensr), # ensure_clause
-          null_location,          # end_keyword_loc
-          location(node)          # location
+          source,        # source
+          null_location, # begin_keyword_loc
+          statements,    # statements
+          rescue_clause, # rescue_clause
+          else_clause,   # else_clause
+          ensure_clause, # ensure_clause
+          null_location, # end_keyword_loc
+          location(node) # location
         )
       when :AND
         nd_1st, nd_2nd = node.children
