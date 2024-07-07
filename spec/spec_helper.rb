@@ -339,6 +339,28 @@ module Prism
       end
     }
   end
+
+  class WhenNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc &&
+        self.then_keyword_loc == other.then_keyword_loc
+      end
+    }
+  end
+
+  class ElseNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.else_keyword_loc == other.else_keyword_loc &&
+        self.else_keyword_loc == other.else_keyword_loc
+      end
+    }
+  end
 end
 
 require "simplecov"
