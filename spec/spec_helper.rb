@@ -357,7 +357,7 @@ module Prism
         super(other) &&
         self.location == other.location &&
         self.else_keyword_loc == other.else_keyword_loc &&
-        self.else_keyword_loc == other.else_keyword_loc
+        self.end_keyword_loc == other.end_keyword_loc
       end
     }
   end
