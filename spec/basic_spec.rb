@@ -1392,6 +1392,38 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "next" do
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
+      test_code(<<~CODE)
+        10.times do |i|
+          next
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
+      test_code(<<~CODE)
+        10.times do |i|
+          next 1
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
+      test_code(<<~CODE)
+        10.times do |i|
+          next 1, 2
+        end
+      CODE
+    end
+  end
+
   describe "return" do
     it "tests" do
       pending "redundant flags and keyword_loc are not supported"

@@ -789,7 +789,14 @@ module AstToPrism
           location(node)         # location
         )
       when :NEXT
-        not_supported(node)
+        nd_stts, = node.children
+
+        Prism::NextNode.new(
+          source,                # source
+          convert_stts(nd_stts), # arguments
+          null_location,         # keyword_loc
+          location(node)         # location
+        )
       when :RETURN
         nd_stts, = node.children
         flags = 0
