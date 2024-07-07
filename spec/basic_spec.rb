@@ -1479,6 +1479,19 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "retry" do
+    it "tests" do
+      pending "BeginNode locations are not supported"
+
+      test_code(<<~CODE)
+        begin
+        rescue
+          retry
+        end
+      CODE
+    end
+  end
+
   describe "begin, rescue, else, ensure" do
     # begin
     it "tests" do
