@@ -1467,6 +1467,18 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "redo" do
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
+      test_code(<<~CODE)
+        10.times do |i|
+          redo
+        end
+      CODE
+    end
+  end
+
   describe "begin, rescue, else, ensure" do
     it "tests" do
       pending "begin_keyword_loc and end_keyword_loc are not supported"
