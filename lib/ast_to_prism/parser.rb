@@ -809,7 +809,10 @@ module AstToPrism
           location(node)         # location
         )
       when :REDO
-        not_supported(node)
+        Prism::RedoNode.new(
+          source,        # source
+          location(node) # location
+        )
       when :RETRY
         not_supported(node)
       when :BEGIN
