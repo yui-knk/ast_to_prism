@@ -1156,34 +1156,44 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "defn" do
-    xit "tests" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
       test_code(<<~CODE)
         def m
         end
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
       test_code(<<~CODE)
         def m(a, b)
         end
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
       test_code(<<~CODE)
         def m a, b
         end
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
       test_code(<<~CODE)
         def m = 1
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
       test_code(<<~CODE)
         def m(a, b) = a + b
       CODE
@@ -1191,6 +1201,48 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "defs" do
+    it "tests" do
+      pending "DefNode locations are not supported"
+
+      test_code(<<~CODE)
+        def obj.m
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "DefNode locations are not supported"
+
+      test_code(<<~CODE)
+        def obj.m(a, b)
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "DefNode locations are not supported"
+
+      test_code(<<~CODE)
+        def obj.m a, b
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "DefNode locations are not supported"
+
+      test_code(<<~CODE)
+        def obj.m = 1
+      CODE
+    end
+
+    it "tests" do
+      pending "DefNode locations are not supported"
+
+      test_code(<<~CODE)
+        def obj.m(a, b) = a + b
+      CODE
+    end
   end
 
   describe "args" do
