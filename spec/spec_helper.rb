@@ -362,7 +362,27 @@ module Prism
     }
   end
 
+  class BreakNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc
+      end
+    }
+  end
+
   class NextNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc
+      end
+    }
+  end
+
+  class ReturnNode
     prepend Module.new {
       def ===(other)
         super(other) &&
