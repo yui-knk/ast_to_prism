@@ -716,12 +716,29 @@ module AstToPrism
         )
       when :UNLESS
         nd_cond, nd_body, nd_else = node.children
+        consequent = nil
 
-        # (source, keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location)
-        Prism::UnlessNode.new(source,
-                          null_location, convert_node(nd_cond),
-                          null_location, convert_stmts(nd_body), convert_node(nd_else),
-                          null_location, location(node))
+        if nd_else
+          # No elsif for "unless"
+          consequent = Prism::ElseNode.new(
+            source,                 # source
+            null_location,          # else_keyword_loc
+            convert_stmts(nd_else), # statements
+            null_location,          # end_keyword_loc
+            location(nd_else)       # location
+          )
+        end
+
+        Prism::UnlessNode.new(
+          source,                 # source
+          null_location,          # keyword_loc
+          convert_node(nd_cond),  # predicate
+          null_location,          # then_keyword_loc
+          convert_stmts(nd_body), # statements
+          consequent,             # consequent
+          null_location,          # end_keyword_loc
+          location(node)          # location
+        )
       when :CASE
         nd_head, nd_body = node.children
         conditions, consequent = convert_case_body(nd_body)
