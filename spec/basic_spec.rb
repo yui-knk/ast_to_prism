@@ -1361,7 +1361,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "break" do
-    xit "tests" do
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
       test_code(<<~CODE)
         10.times do |i|
           break
@@ -1369,7 +1371,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
       test_code(<<~CODE)
         10.times do |i|
           break 1
@@ -1377,7 +1381,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
       CODE
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
       test_code(<<~CODE)
         10.times do |i|
           break 1, 2
