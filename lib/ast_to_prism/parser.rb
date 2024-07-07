@@ -817,7 +817,10 @@ module AstToPrism
           location(node) # location
         )
       when :RETRY
-        not_supported(node)
+        Prism::RetryNode.new(
+          source,        # source
+          location(node) # location
+        )
       when :BEGIN
         # example: begin; 1; end
 
