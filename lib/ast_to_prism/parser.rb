@@ -250,6 +250,21 @@ module AstToPrism
     end
 
     def convert_block_parameters(locals, nd_args)
+      parameters, local_nodes = convert_parameters(locals, nd_args)
+
+      return nil if parameters.nil?
+
+      Prism::BlockParametersNode.new(
+        source,           # source
+        parameters,       # parameters
+        local_nodes,      # locals
+        null_location,    # opening_loc
+        null_location,    # closing_loc
+        location(nd_args) # location
+      )
+    end
+
+    def convert_parameters(locals, nd_args)
       return nil if nd_args.nil?
 
       pre_num, pre_init, opt, first_post, post_num, post_init, rest, kw, kwrest, block = nd_args.children
@@ -263,6 +278,10 @@ module AstToPrism
       block_node = nil
       local_nodes = []
       index = 0
+
+      if [pre_num, pre_init, opt, first_post, post_num, post_init, rest, kw, kwrest, block] == [0, nil, nil, nil, 0, nil, nil, nil, nil, nil]
+        return nil, local_nodes
+      end
 
       pre_num.times do |i|
         # TODO: Remove "internal variable" from original nodes.
@@ -447,14 +466,7 @@ module AstToPrism
         end
       end
 
-      Prism::BlockParametersNode.new(
-        source,           # source
-        parameters,       # parameters
-        local_nodes,      # locals
-        null_location,    # opening_loc
-        null_location,    # closing_loc
-        location(nd_args) # location
-      )
+      return parameters, local_nodes
     end
 
     def convert_stts(node)
@@ -473,10 +485,6 @@ module AstToPrism
 
       # (source, flags, arguments, location)
       Prism::ArgumentsNode.new(source, 0, arguments, location(node))
-    end
-
-    def convert_parameters(nd_tbl, nd_args)
-      return nil if nd_args.nil?
     end
 
     # * NODE_WHEN
@@ -1328,42 +1336,44 @@ module AstToPrism
       when :DEFN
         nd_mid, nd_defn = node.children
         nd_tbl, nd_args, nd_body = nd_defn.children
+        parameters, local_nodes = convert_parameters(nd_tbl, nd_args)
 
         Prism::DefNode.new(
-          source,                              # source
-          nd_mid,                              # name
-          null_location,                       # name_loc
-          nil,                                 # receiver
-          convert_parameters(nd_tbl, nd_args), # parameters
-          convert_stmts(nd_body),              # body
-          nd_tbl,                              # locals
-          null_location,                       # def_keyword_loc
-          null_location,                       # operator_loc
-          null_location,                       # lparen_loc
-          null_location,                       # rparen_loc
-          null_location,                       # equal_loc
-          null_location,                       # end_keyword_loc
-          location(node)                       # location
+          source,                 # source
+          nd_mid,                 # name
+          null_location,          # name_loc
+          nil,                    # receiver
+          parameters,             # parameters
+          convert_stmts(nd_body), # body
+          nd_tbl,                 # locals
+          null_location,          # def_keyword_loc
+          null_location,          # operator_loc
+          null_location,          # lparen_loc
+          null_location,          # rparen_loc
+          null_location,          # equal_loc
+          null_location,          # end_keyword_loc
+          location(node)          # location
         )
       when :DEFS
         nd_recv, nd_mid, nd_defn = node.children
         nd_tbl, nd_args, nd_body = nd_defn.children
+        parameters, local_nodes = convert_parameters(nd_tbl, nd_args)
 
         Prism::DefNode.new(
-          source,                              # source
-          nd_mid,                              # name
-          null_location,                       # name_loc
-          convert_node(nd_recv),               # receiver
-          convert_parameters(nd_tbl, nd_args), # parameters
-          convert_stmts(nd_body),              # body
-          nd_tbl,                              # locals
-          null_location,                       # def_keyword_loc
-          null_location,                       # operator_loc
-          null_location,                       # lparen_loc
-          null_location,                       # rparen_loc
-          null_location,                       # equal_loc
-          null_location,                       # end_keyword_loc
-          location(node)                       # location
+          source,                 # source
+          nd_mid,                 # name
+          null_location,          # name_loc
+          convert_node(nd_recv),  # receiver
+          parameters,             # parameters
+          convert_stmts(nd_body), # body
+          nd_tbl,                 # locals
+          null_location,          # def_keyword_loc
+          null_location,          # operator_loc
+          null_location,          # lparen_loc
+          null_location,          # rparen_loc
+          null_location,          # equal_loc
+          null_location,          # end_keyword_loc
+          location(node)          # location
         )
       when :ALIAS
         nd_1st, nd_2nd = node.children
