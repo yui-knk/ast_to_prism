@@ -498,15 +498,29 @@ module AstToPrism
           convert_node(n)
         end
 
-        # (source, keyword_loc, conditions, then_keyword_loc, statements, location)
-        conditions << Prism::WhenNode.new(source, null_location, cond, null_location, convert_stmts(nd_body), location(node))
+        conditions << Prism::WhenNode.new(
+          source,                           # source
+          null_location,                    # keyword_loc
+          cond,                             # conditions
+          null_location,                    # then_keyword_loc
+          convert_case_statements(nd_body), # statements
+          location(node)                    # location
+        )
 
         if nd_next&.type == :WHEN
           node = nd_next
         else
-          # NOTE: end_keyword_loc of ElseNode seems to be redundant
-          # (source, else_keyword_loc, statements, end_keyword_loc, location)
-          consequent = Prism::ElseNode.new(source, null_location, convert_stmts(nd_next), null_location, location(node))
+          if nd_next
+            # NOTE: end_keyword_loc of ElseNode seems to be redundant
+            consequent = Prism::ElseNode.new(
+              source,                           # source
+              null_location,                    # else_keyword_loc
+              convert_case_statements(nd_next), # statements
+              null_location,                    # end_keyword_loc
+              location(node)                    # location
+            )
+          end
+
           node = nil
         end
       end
@@ -521,6 +535,8 @@ module AstToPrism
         convert_stmts(node)
       end
     end
+
+    alias :convert_case_statements :convert_block_body
 
     def convert_block(node)
       return nil if node.nil?
