@@ -413,6 +413,19 @@ module Prism
       end
     }
   end
+
+  class ForNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.for_keyword_loc == other.for_keyword_loc &&
+        self.in_keyword_loc == other.in_keyword_loc &&
+        self.do_keyword_loc == other.do_keyword_loc &&
+        self.end_keyword_loc == other.end_keyword_loc
+      end
+    }
+  end
 end
 
 require "simplecov"

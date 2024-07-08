@@ -1444,6 +1444,40 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "for" do
+    it "tests" do
+      pending "ForNode locations are not supported"
+
+      test_code(<<~CODE)
+        for i in 1..3 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "ForNode locations are not supported"
+
+      test_code(<<~CODE)
+        for x, y in 1..3 do
+          foo
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "ForNode locations are not supported"
+
+      test_code(<<~CODE)
+        for (x, y) in 1..3 do
+          foo
+        end
+      CODE
+    end
+
+    # TODO: Need more test cases for mlhs
+  end
+
   describe "flip-flap" do
     it "tests" do
       pending "IfNode and StringNode need to support locations"
