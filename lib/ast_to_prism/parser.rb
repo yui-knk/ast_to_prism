@@ -1553,7 +1553,21 @@ module AstToPrism
           location(node) # location
         )
       when :MATCH
-        not_supported(node)
+        reg, = node.children
+        # TODO: Implement flags
+        # NOTE: Flag, e.g. forced_us_ascii_encoding for `/foo/`, is correct?
+        #       because `/foo/` does not enforce encoding.
+        flags = 0
+
+        Prism::MatchLastLineNode.new(
+          source,        # source
+          flags,         # flags
+          null_location, # opening_loc
+          null_location, # content_loc
+          null_location, # closing_loc
+          reg.source,    # unescaped
+          location(node) # location
+        )
       when :MATCH2
         not_supported(node)
       when :MATCH3

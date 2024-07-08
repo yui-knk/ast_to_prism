@@ -471,6 +471,18 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "match expression (against $_ implicitly) (MATCH)" do
+    it "tests" do
+      pending "MatchLastLineNode locations are not supported"
+
+      test_code(<<~CODE)
+        if /foo/
+          bar
+        end
+      CODE
+    end
+  end
+
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
       pending "IndexOperatorWriteNode locations are not supported"
