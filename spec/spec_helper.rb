@@ -44,6 +44,18 @@ module Prism
     }
   end
 
+  class RegularExpressionNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.content_loc == other.content_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
   class IfNode
     prepend Module.new {
       def ===(other)

@@ -1673,7 +1673,19 @@ module AstToPrism
           location(node) # location
         )
       when :REGX
-        not_supported(node)
+        regx, = node.children
+        # TODO: RubyVM::AST needs to export `options`
+        flags = 0
+
+        Prism::RegularExpressionNode.new(
+          source,        # source
+          flags,         # flags
+          null_location, # opening_loc
+          null_location, # content_loc
+          null_location, # closing_loc
+          regx.source,   # unescaped
+          location(node) # location
+        )
       when :ONCE
         not_supported(node)
       when :DSTR
