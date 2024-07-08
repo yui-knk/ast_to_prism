@@ -455,6 +455,12 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "nth special variable reference (NTH_REF)" do
+    it "tests" do
+      $1
+    end
+  end
+
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
       pending "IndexOperatorWriteNode locations are not supported"

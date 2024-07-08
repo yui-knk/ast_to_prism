@@ -1536,7 +1536,13 @@ module AstToPrism
         # (source, name, location)
         Prism::GlobalVariableReadNode.new(source, nd_vid, location(node))
       when :NTH_REF
-        not_supported(node)
+        nd_nth, = node.children
+
+        Prism::NumberedReferenceReadNode.new(
+          source,        # source
+          nd_nth,        # number
+          location(node) # location
+        )
       when :BACK_REF
         not_supported(node)
       when :MATCH
