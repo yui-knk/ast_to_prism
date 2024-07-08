@@ -1168,7 +1168,90 @@ module AstToPrism
           location(node)   # location
         )
       when :OP_ASGN_AND
-        not_supported(node)
+        nd_head, op, nd_value = node.children
+
+        check_node_type(nd_value, :LASGN, :DASGN, :IASGN, :CVASGN, :GASGN, :CDECL)
+        _, nd_value2 = nd_value.children
+        if nd_value.type == :CDECL
+          if nd_value.children.count != 2
+            raise "CDECL should have 2 elements. #{nd_value}"
+          end
+        end
+        value = convert_node(nd_value2)
+
+        case nd_head.type
+        when :LVAR
+          nd_vid, = nd_head.children
+
+          Prism::LocalVariableAndWriteNode.new(
+            source,        # source
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            nd_vid,        # name
+            0,             # depth
+            location(node) # location
+          )
+        when :DVAR
+          nd_vid, = nd_head.children
+
+          # TODO: Need to take care of depth
+          Prism::LocalVariableAndWriteNode.new(
+            source,        # source
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            nd_vid,        # name
+            0,             # depth
+            location(node) # location
+          )
+        when :IVAR
+          nd_vid, = nd_head.children
+
+          Prism::InstanceVariableAndWriteNode.new(
+            source,        # source
+            nd_vid,        # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        when :CVAR
+          nd_vid, = nd_head.children
+
+          Prism::ClassVariableAndWriteNode.new(
+            source,        # source
+            nd_vid,        # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        when :GVAR
+          nd_vid, = nd_head.children
+
+          Prism::GlobalVariableAndWriteNode.new(
+            source,        # source
+            nd_vid,        # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        when :CONST
+          nd_vid, = nd_head.children
+
+          Prism::ConstantAndWriteNode.new(
+            source,        # source
+            nd_vid,        # name
+            null_location, # name_loc
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        else
+          not_expected(nd_head)
+        end
       when :OP_ASGN_OR
         not_supported(node)
       when :OP_CDECL
