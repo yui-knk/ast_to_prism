@@ -1544,7 +1544,13 @@ module AstToPrism
           location(node) # location
         )
       when :BACK_REF
-        not_supported(node)
+        nd_nth, = node.children
+
+        Prism::BackReferenceReadNode.new(
+          source,        # source
+          nd_nth,        # name
+          location(node) # location
+        )
       when :MATCH
         not_supported(node)
       when :MATCH2
