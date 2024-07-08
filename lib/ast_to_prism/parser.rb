@@ -1146,7 +1146,27 @@ module AstToPrism
           location(node)   # location
         )
       when :OP_ASGN2
-        not_supported(node)
+        nd_recv, nd_aid, nd_vid, nd_mid, nd_value = node.children
+        receiver = convert_node(nd_recv)
+        read_name = nd_vid
+        # NOTE: Why write_name is needed?
+        write_name = "#{nd_vid}=".to_sym
+        binary_operator = nd_mid
+        value = convert_node(nd_value)
+
+        Prism::CallOperatorWriteNode.new(
+          source,          # source
+          0,               # flags
+          receiver,        # receiver
+          null_location,   # call_operator_loc
+          null_location,   # message_loc
+          read_name,       # read_name
+          write_name,      # write_name
+          binary_operator, # binary_operator
+          null_location,   # binary_operator_loc
+          value,           # value
+          location(node)   # location
+        )
       when :OP_ASGN_AND
         not_supported(node)
       when :OP_ASGN_OR

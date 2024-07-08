@@ -441,6 +441,16 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "attr assignment with operator (OP_ASGN2)" do
+    it "tests" do
+      pending "CallOperatorWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        struct.field += foo
+      CODE
+    end
+  end
+
   describe "super" do
     it "tests" do
       pending "keyword_loc, lparen_loc and rparen_loc are not supported"
