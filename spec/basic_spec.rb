@@ -509,6 +509,27 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "match expression (regexp first) (MATCH2)" do
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code(<<~CODE)
+        /foo/ =~ 'bar'
+      CODE
+    end
+
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code(<<~CODE)
+        /(?<var>foo)/ =~ 'bar'
+      CODE
+    end
+  end
+
+  describe "(MATCH3)" do
+  end
+
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
       pending "IndexOperatorWriteNode locations are not supported"

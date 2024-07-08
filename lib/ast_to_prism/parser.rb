@@ -1569,7 +1569,78 @@ module AstToPrism
           location(node) # location
         )
       when :MATCH2
-        not_supported(node)
+        case node.children.count
+        when 2
+          nd_recv, nd_value = node.children
+
+          arguments = Prism::ArgumentsNode.new(
+            source,                   # source
+            0,                        # flags
+            [convert_node(nd_value)], # arguments
+            location(nd_value)        # location
+          )
+
+          Prism::CallNode.new(
+            source,                # source
+            0,                     # flags
+            convert_node(nd_recv), # receiver
+            nil,                   # call_operator_loc
+            :=~,                   # name
+            nil,                   # message_loc
+            nil,                   # opening_loc
+            arguments,             # arguments
+            nil,                   # closing_loc
+            nil,                   # block
+            location(node)         # location
+          )
+        when 3
+          # Named capture. E.g. `/(?<var>foo)/ =~ 'bar'`
+          nd_recv, nd_value, nd_args = node.children
+          check_node_type(nd_args, :BLOCK)
+
+          arguments = Prism::ArgumentsNode.new(
+            source,                   # source
+            0,                        # flags
+            [convert_node(nd_value)], # arguments
+            location(nd_value)        # location
+          )
+
+          call = Prism::CallNode.new(
+            source,                # source
+            0,                     # flags
+            convert_node(nd_recv), # receiver
+            nil,                   # call_operator_loc
+            :=~,                   # name
+            nil,                   # message_loc
+            nil,                   # opening_loc
+            arguments,             # arguments
+            nil,                   # closing_loc
+            nil,                   # block
+            location(node)         # location
+          )
+
+          targets = nd_args.children.map do |node|
+            check_node_type(node, :LASGN)
+
+            vid, value = node.children
+
+            Prism::LocalVariableTargetNode.new(
+              source,        # source
+              vid,           # name
+              0,             # depth
+              location(node) # location
+            )
+          end
+
+          Prism::MatchWriteNode.new(
+            source,        # source
+            call,          # call
+            targets,       # targets
+            location(node) # location
+          )
+        else
+          raise "MATCH2 should have 2 or 3 elements. #{node}"
+        end
       when :MATCH3
         not_supported(node)
       when :STR
