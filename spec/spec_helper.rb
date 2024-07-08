@@ -414,6 +414,18 @@ module Prism
     }
   end
 
+  class YieldNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc &&
+        self.lparen_loc == other.lparen_loc &&
+        self.rparen_loc == other.rparen_loc
+      end
+    }
+  end
+
   class ForNode
     prepend Module.new {
       def ===(other)

@@ -1260,7 +1260,16 @@ module AstToPrism
           location(node) # location
         )
       when :YIELD
-        not_supported(node)
+        nd_head, = node.children
+
+        Prism::YieldNode.new(
+          source,                     # source
+          null_location,              # keyword_loc
+          null_location,              # lparen_loc
+          convert_arguments(nd_head), # arguments
+          null_location,              # rparen_loc
+          location(node)              # location
+        )
       when :LVAR
         nd_vid, = node.children
 
