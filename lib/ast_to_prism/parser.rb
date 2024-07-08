@@ -1123,7 +1123,28 @@ module AstToPrism
       when :CDECL
         not_supported(node)
       when :OP_ASGN1
-        not_supported(node)
+        nd_recv, nd_mid, nd_index, nd_rvalue = node.children
+        receiver = convert_node(nd_recv)
+        arguments = convert_arguments(nd_index)
+        # NOTE: Can block not be nil?
+        block = nil
+        binary_operator = nd_mid
+        value = convert_node(nd_rvalue)
+
+        Prism::IndexOperatorWriteNode.new(
+          source,          # source
+          0,               # flags
+          receiver,        # receiver
+          null_location,   # call_operator_loc
+          null_location,   # opening_loc
+          arguments,       # arguments
+          null_location,   # closing_loc
+          block,           # block
+          binary_operator, # binary_operator
+          null_location,   # binary_operator_loc
+          value,           # value
+          location(node)   # location
+        )
       when :OP_ASGN2
         not_supported(node)
       when :OP_ASGN_AND
