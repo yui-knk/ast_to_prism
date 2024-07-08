@@ -236,6 +236,61 @@ module Prism
     }
   end
 
+  class LocalVariableAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class InstanceVariableAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class ClassVariableAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class GlobalVariableAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class ConstantAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
   class BeginNode
     prepend Module.new {
       def ===(other)
