@@ -508,6 +508,63 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "assignment with && operator (OP_ASGN_OR)" do
+    it "tests" do
+      pending "LocalVariableOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        foo ||= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "LocalVariableOrWriteNode locations and depth are not supported"
+
+      test_code(<<~CODE)
+        foo = 0
+        1.times do
+          foo ||= bar
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "InstanceVariableOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        @foo ||= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "ClassVariableOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        @@foo ||= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "GlobalVariableOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        $foo ||= bar
+      CODE
+    end
+
+    # NOTE: These are NODE_OP_CDECL
+    #
+    # * `Foo::Bar ||= bar`
+    # * `expr::Bar ||= bar`
+    it "tests" do
+      pending "ConstantOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        Foo ||= bar
+      CODE
+    end
+  end
+
   describe "super" do
     it "tests" do
       pending "keyword_loc, lparen_loc and rparen_loc are not supported"
