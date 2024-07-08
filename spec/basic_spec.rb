@@ -461,6 +461,14 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "back special variable reference (BACK_REF)" do
+    it "tests" do
+      test_code(<<~CODE)
+        $&
+      CODE
+    end
+  end
+
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
       pending "IndexOperatorWriteNode locations are not supported"
