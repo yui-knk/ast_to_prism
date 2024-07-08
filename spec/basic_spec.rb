@@ -457,7 +457,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "nth special variable reference (NTH_REF)" do
     it "tests" do
-      $1
+      test_code(<<~CODE)
+        $1
+      CODE
     end
   end
 

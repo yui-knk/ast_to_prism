@@ -1537,10 +1537,11 @@ module AstToPrism
         Prism::GlobalVariableReadNode.new(source, nd_vid, location(node))
       when :NTH_REF
         nd_nth, = node.children
+        number = Integer(nd_nth[1..])
 
         Prism::NumberedReferenceReadNode.new(
           source,        # source
-          nd_nth,        # number
+          number,        # number
           location(node) # location
         )
       when :BACK_REF
