@@ -612,24 +612,21 @@ module AstToPrism
       when :LASGN
         vid, _ = node.children
 
-        # (source, name, depth, location)
         Prism::LocalVariableTargetNode.new(
-          source,
-          vid,
-          0,
-          location(node)
+          source,        # source
+          vid,           # name
+          0,             # depth
+          location(node) # location
         )
       when :DASGN
         vid, _ = node.children
 
         # TODO: Implement depth
-
-        # (source, name, depth, location)
         Prism::LocalVariableTargetNode.new(
-          source,
-          vid,
-          0,
-          location(node)
+          source,        # source
+          vid,           # name
+          0,             # depth
+          location(node) # location
         )
       when :IASGN
         vid, _ = node.children
