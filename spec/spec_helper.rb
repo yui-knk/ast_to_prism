@@ -211,6 +211,19 @@ module Prism
     }
   end
 
+  class IndexOperatorWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.call_operator_loc == other.call_operator_loc &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc &&
+        self.binary_operator_loc == other.binary_operator_loc
+      end
+    }
+  end
+
   class BeginNode
     prepend Module.new {
       def ===(other)
