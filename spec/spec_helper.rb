@@ -291,6 +291,16 @@ module Prism
     }
   end
 
+  class ConstantPathAndWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
   class LocalVariableOrWriteNode
     prepend Module.new {
       def ===(other)
@@ -341,6 +351,16 @@ module Prism
         super(other) &&
         self.location == other.location &&
         self.name_loc == other.name_loc &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
+  class ConstantPathOrWriteNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
         self.operator_loc == other.operator_loc
       end
     }
