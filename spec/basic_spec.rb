@@ -280,6 +280,38 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "lambda" do
+    it "tests" do
+      test_code(<<~CODE)
+        -> { foo }
+      CODE
+    end
+
+    it "tests" do
+      pending "LambdaNode locations are not supported"
+
+      test_code(<<~CODE)
+        -> (a, b) { foo }
+      CODE
+    end
+
+    it "tests" do
+      pending "LambdaNode locations are not supported"
+
+      test_code(<<~CODE)
+        -> a, b { foo }
+      CODE
+    end
+
+    it "tests" do
+      pending "LambdaNode locations are not supported"
+
+      test_code(<<~CODE)
+        -> (a, b; l1, l2) { foo }
+      CODE
+    end
+  end
+
   describe "dynamic local variable" do
     it "tests" do
       pending "name_loc and operator_loc are not supported"

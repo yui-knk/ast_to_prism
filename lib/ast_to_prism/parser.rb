@@ -266,6 +266,7 @@ module AstToPrism
 
     def convert_parameters(locals, nd_args)
       return nil if nd_args.nil?
+      check_node_type(nd_args, :ARGS)
 
       pre_num, pre_init, opt, first_post, post_num, post_init, rest, kw, kwrest, block = nd_args.children
 
@@ -1860,7 +1861,21 @@ module AstToPrism
       when :ATTRASGN
         not_supported(node)
       when :LAMBDA
-        not_supported(node)
+        nd_body, = node.children
+        check_node_type(nd_body, :SCOPE)
+        nd_tbl, nd_args, nd_body2 = nd_body.children
+        parameters = convert_block_parameters(nd_tbl, nd_args)
+
+        Prism::LambdaNode.new(
+          source,                  # source
+          nd_tbl.compact,          # locals
+          null_location,           # operator_loc
+          null_location,           # opening_loc
+          null_location,           # closing_loc
+          parameters,              # parameters
+          convert_stmts(nd_body2), # body
+          location(node)           # location
+        )
       when :OPT_ARG
         not_supported(node)
       when :KW_ARG
