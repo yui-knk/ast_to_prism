@@ -497,8 +497,8 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
     # NOTE: These are NODE_OP_CDECL
     #
-    # * `Foo::Bar ||= bar`
-    # * `expr::Bar ||= bar`
+    # * `Foo::Bar &&= bar`
+    # * `expr::Bar &&= bar`
     it "tests" do
       pending "ConstantAndWriteNode locations are not supported"
 
