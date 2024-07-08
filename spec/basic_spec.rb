@@ -203,6 +203,32 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "regex" do
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code("/foo/")
+    end
+
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code("/foo/o")
+    end
+
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code("/(?<var>foo)/")
+    end
+
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code("/(?<var>foo)/o")
+    end
+  end
+
   describe "array" do
     it "tests" do
       test_code("[]")
