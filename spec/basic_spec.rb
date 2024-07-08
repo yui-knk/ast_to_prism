@@ -1637,6 +1637,48 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "yield" do
+    it "tests" do
+      pending "YieldNode locations are not supported"
+
+      test_code(<<~CODE)
+        def m
+          yield
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "YieldNode locations are not supported"
+
+      test_code(<<~CODE)
+        def m
+          yield()
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "YieldNode locations are not supported"
+
+      test_code(<<~CODE)
+        def m
+          yield 1, 2
+        end
+      CODE
+    end
+
+    it "tests" do
+      pending "YieldNode locations are not supported"
+
+      test_code(<<~CODE)
+        def m
+          yield(1, 2)
+        end
+      CODE
+    end    
+  end
+
   describe "redo" do
     it "tests" do
       pending "opening_loc and closing_loc of BlockParametersNode are not supported"
