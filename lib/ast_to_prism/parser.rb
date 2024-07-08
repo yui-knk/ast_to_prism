@@ -586,7 +586,7 @@ module AstToPrism
         nd_mid, = node.children
         nd_mid
       else
-        not_supported(node)
+        not_expected(node)
       end
     end
 
@@ -668,7 +668,7 @@ module AstToPrism
           location(node)
         )
       else
-        not_supported(node)
+        not_expected(node)
       end
     end
 
@@ -900,7 +900,7 @@ module AstToPrism
           location(node)           # location
         )
       when :FOR_MASGN
-        not_supported(node)
+        not_expected(node)
       when :BREAK
         nd_stts, = node.children
 
@@ -1616,7 +1616,7 @@ module AstToPrism
         # (source, location)
         Prism::FalseNode.new(source, location(node))
       when :ERRINFO
-        not_supported(node)
+        not_expected(node)
       when :DEFINED
         not_supported(node)
       when :POSTEXE
@@ -1634,6 +1634,7 @@ module AstToPrism
       when :ARGS
         not_supported(node)
       when :SCOPE
+        # TODO: not_expected ?
         not_supported(node)
       when :ARYPTN
         not_supported(node)
@@ -1653,17 +1654,23 @@ module AstToPrism
         Prism::SourceEncodingNode.new(source, location(node))
       when :ERROR
         not_supported(node)
-      # when :ARGS_AUX
-      #   not_supported(node)
-      # when :LAST
-      #   not_supported(node)
+      when :ARGS_AUX
+        not_expected(node)
+      when :LAST
+        not_expected(node)
       else
-        not_supported(node)
+        not_expected(node)
       end
     end
 
+    # Raise error because the node is still not supported
     def not_supported(node)
       raise "Node #{node.type} is not supported."
+    end
+
+    # Raise error because the node is not expected
+    def not_expected(node)
+      raise "Node #{node.type} is not expected here."
     end
   end
 end
