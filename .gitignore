@@ -10,3 +10,5 @@
 /tmp/
 /vendor/bundle
 /.idea/
+
+test.rb
