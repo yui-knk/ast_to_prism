@@ -565,6 +565,40 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "constant declaration with operator (OP_CDECL)" do
+    it "tests" do
+      pending "ConstantPathAndWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        Foo::Bar &&= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "ConstantPathAndWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        expr::Bar &&= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "ConstantPathOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        Foo::Bar ||= bar
+      CODE
+    end
+
+    it "tests" do
+      pending "ConstantPathOrWriteNode locations are not supported"
+
+      test_code(<<~CODE)
+        expr::Bar ||= bar
+      CODE
+    end
+  end
+
   describe "super" do
     it "tests" do
       pending "keyword_loc, lparen_loc and rparen_loc are not supported"

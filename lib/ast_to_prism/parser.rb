@@ -1338,7 +1338,30 @@ module AstToPrism
           not_expected(nd_head)
         end
       when :OP_CDECL
-        not_supported(node)
+        nd_head, nd_aid, nd_value = node.children
+        target = convert_node(nd_head)
+        value = convert_node(nd_value)
+
+        case nd_aid
+        when :"&&"
+          Prism::ConstantPathAndWriteNode.new(
+            source,        # source
+            target,        # target
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        when :"||"
+          Prism::ConstantPathOrWriteNode.new(
+            source,        # source
+            target,        # target
+            null_location, # operator_loc
+            value,         # value
+            location(node) # location
+          )
+        else
+          raise "#{nd_aid} is not expected. #{node}"
+        end
       when :CALL
         # example: obj.foo(1)
         nd_recv, nd_mid, nd_args = node.children
