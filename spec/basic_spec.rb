@@ -631,6 +631,24 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "attr assignment (ATTRASGN)" do
+    it "tests" do
+      pending "CallNode locations are not supported"
+
+      test_code(<<~CODE)
+        struct.field = foo
+      CODE
+    end
+
+    it "tests" do
+      pending "CallNode locations are not supported"
+
+      test_code(<<~CODE)
+        obj["key"] = bar
+      CODE
+    end
+  end
+
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
       pending "IndexOperatorWriteNode locations are not supported"

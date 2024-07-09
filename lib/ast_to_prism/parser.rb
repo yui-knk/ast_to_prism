@@ -2067,7 +2067,21 @@ module AstToPrism
       when :POSTEXE
         not_supported(node)
       when :ATTRASGN
-        not_supported(node)
+        nd_recv, nd_mid, nd_args = node.children
+
+        Prism::CallNode.new(
+          source,                     # source
+          0,                          # flags
+          convert_node(nd_recv),      # receiver
+          nil,                        # call_operator_loc
+          nd_mid,                     # name
+          nil,                        # message_loc
+          nil,                        # opening_loc
+          convert_arguments(nd_args), # arguments
+          nil,                        # closing_loc
+          nil,                        # block
+          location(node)              # location
+        )
       when :LAMBDA
         nd_body, = node.children
         check_node_type(nd_body, :SCOPE)
