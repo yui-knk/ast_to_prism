@@ -728,7 +728,7 @@ module AstToPrism
     end
 
     def convert_dynamic_literal(node)
-      check_node_type(node, :DSTR, :DREGX)
+      check_node_type(node, :DSTR, :DXSTR, :DREGX)
 
       string, nd_head, nd_next = node.children
       flags = 0
@@ -1825,7 +1825,15 @@ module AstToPrism
           location(node) # location
         )
       when :DXSTR
-        not_supported(node)
+        parts = convert_dynamic_literal(node)
+
+        Prism::InterpolatedXStringNode.new(
+          source,        # source
+          null_location, # opening_loc
+          parts,         # parts
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :DREGX
         flags = 0
         parts = convert_dynamic_literal(node)
