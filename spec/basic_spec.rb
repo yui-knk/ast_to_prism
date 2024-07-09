@@ -541,7 +541,40 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
-  describe "(MATCH3)" do
+  describe "match expression (regexp second) (MATCH3)" do
+    it "tests" do
+      pending "CallNode locations are not supported"
+
+      test_code(<<~'CODE')
+        'bar' =~ /foo#{v1}/
+      CODE
+    end
+
+    it "tests" do
+      pending "CallNode locations are not supported"
+
+      test_code(<<~'CODE')
+        'bar' =~ /(?<var>foo)#{v1}/
+      CODE
+    end
+  end
+
+  describe "match expression (NODE_CALL)" do
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code(<<~'CODE')
+        'bar' =~ /foo/
+      CODE
+    end
+
+    it "tests" do
+      pending "RegularExpressionNode locations are not supported"
+
+      test_code(<<~'CODE')
+        'bar' =~ /(?<var>foo)/
+      CODE
+    end
   end
 
   describe "array assignment with operator (OP_ASGN1)" do

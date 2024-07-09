@@ -1642,7 +1642,30 @@ module AstToPrism
           raise "MATCH2 should have 2 or 3 elements. #{node}"
         end
       when :MATCH3
-        not_supported(node)
+        # NOTE: MATCH3 nd_recv, nd_value is inverse.
+
+        nd_recv, nd_value = node.children
+
+        arguments = Prism::ArgumentsNode.new(
+          source,                  # source
+          0,                       # flags
+          [convert_node(nd_recv)], # arguments
+          location(nd_recv)        # location
+        )
+
+        Prism::CallNode.new(
+          source,                 # source
+          0,                      # flags
+          convert_node(nd_value), # receiver
+          nil,                    # call_operator_loc
+          :=~,                    # name
+          nil,                    # message_loc
+          nil,                    # opening_loc
+          arguments,              # arguments
+          nil,                    # closing_loc
+          nil,                    # block
+          location(node)          # location
+        )
       when :STR
         string, = node.children
         flags = 0
