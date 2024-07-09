@@ -728,7 +728,7 @@ module AstToPrism
     end
 
     def convert_dynamic_literal(node)
-      check_node_type(node, :DSTR, :DXSTR, :DREGX)
+      check_node_type(node, :DSTR, :DSYM, :DXSTR, :DREGX)
 
       string, nd_head, nd_next = node.children
       flags = 0
@@ -1847,7 +1847,15 @@ module AstToPrism
           location(node) # location
         )
       when :DSYM
-        not_supported(node)
+        parts = convert_dynamic_literal(node)
+
+        Prism::InterpolatedSymbolNode.new(
+          source,        # source
+          null_location, # opening_loc
+          parts,         # parts
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :SYM
         string, = node.children[0]
         # TODO: Implement flags

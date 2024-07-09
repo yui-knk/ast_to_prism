@@ -153,6 +153,16 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "symbol literal with interpolation" do
+    it "tests" do
+      pending "InterpolatedSymbolNode locations are not supported"
+
+      test_code(<<~'CODE')
+        :"foo#{ bar }baz"
+      CODE
+    end
+  end
+
   describe "string" do
     it "tests" do
       pending "opening_loc, content_loc and closing_loc are not supported"

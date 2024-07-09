@@ -43,6 +43,29 @@ module Prism
     }
   end
 
+  class SymbolNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.content_loc == other.content_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
+  class InterpolatedSymbolNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
   class XStringNode
     prepend Module.new {
       def ===(other)
