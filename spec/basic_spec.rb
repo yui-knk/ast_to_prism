@@ -186,6 +186,25 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "string literal with interpolation" do
+    it "tests" do
+      pending "InterpolatedStringNode locations are not supported"
+
+      test_code(<<~'CODE')
+        "foo#{ bar }baz"
+      CODE
+    end
+
+    it "tests" do
+      pending "InterpolatedStringNode locations are not supported"
+
+      test_code(<<~'CODE')
+        # frozen_string_literal: true
+        "foo#{ bar }baz"
+      CODE
+    end
+  end
+
   describe "xstring" do
     it "tests" do
       pending "opening_loc, content_loc and closing_loc are not supported"
