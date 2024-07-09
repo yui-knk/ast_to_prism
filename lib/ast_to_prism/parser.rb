@@ -1654,7 +1654,7 @@ module AstToPrism
           null_location,  # content_loc
           null_location,  # closing_loc
           string,         # unescaped
-          location(node), # location
+          location(node)  # location
         )
       when :XSTR
         string, = node.children
