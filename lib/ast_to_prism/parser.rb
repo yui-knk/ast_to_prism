@@ -1764,7 +1764,38 @@ module AstToPrism
       when :DXSTR
         not_supported(node)
       when :DREGX
-        not_supported(node)
+        string, nd_head, nd_next = node.children
+        flags = 0
+        parts = []
+
+        parts << Prism::StringNode.new(
+          source,         # source
+          flags,          # flags
+          null_location,  # opening_loc
+          null_location,  # content_loc
+          null_location,  # closing_loc
+          string,         # unescaped
+          null_location   # location
+        )
+
+        parts << convert_node(nd_head)
+
+        if nd_next
+          check_node_type(nd_next, :LIST)
+          # TODO: node.children should not include last nil
+          nd_next.children[0...-1].map do |n|
+            parts << convert_node(n)
+          end
+        end
+
+        Prism::InterpolatedRegularExpressionNode.new(
+          source,        # source
+          flags,         # flags
+          null_location, # opening_loc
+          parts,         # parts
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :DSYM
         not_supported(node)
       when :SYM
@@ -1782,7 +1813,16 @@ module AstToPrism
           location(node) # location
         )
       when :EVSTR
-        not_supported(node)
+        nd_body, = node.children
+        statements = convert_stmts(nd_body)
+
+        Prism::EmbeddedStatementsNode.new(
+          source,        # source
+          null_location, # opening_loc
+          statements,    # statements
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :ARGSCAT
         not_supported(node)
       when :ARGSPUSH

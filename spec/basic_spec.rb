@@ -229,6 +229,20 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "regexp literal with interpolation (DREGX)" do
+    it "tests" do
+      pending "InterpolatedRegularExpressionNode locations are not supported"
+
+      test_code('/foo#{ bar }baz/')
+    end
+
+    it "tests" do
+      pending "InterpolatedRegularExpressionNode locations are not supported"
+
+      test_code('/foo#{ bar }baz#{ bar2 }baz2/')
+    end
+  end
+
   describe "array" do
     it "tests" do
       test_code("[]")

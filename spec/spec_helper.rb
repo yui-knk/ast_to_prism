@@ -44,6 +44,17 @@ module Prism
     }
   end
 
+  class EmbeddedStatementsNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
   class RegularExpressionNode
     prepend Module.new {
       def ===(other)
@@ -51,6 +62,17 @@ module Prism
         self.location == other.location &&
         self.opening_loc == other.opening_loc &&
         self.content_loc == other.content_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
+  class InterpolatedRegularExpressionNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
         self.closing_loc == other.closing_loc
       end
     }
