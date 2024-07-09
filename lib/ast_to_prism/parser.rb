@@ -823,7 +823,7 @@ module AstToPrism
       when :CASE3
         not_supported(node)
       when :WHEN
-        not_supported(node)
+        not_expected(node)
       when :IN
         not_supported(node)
       when :WHILE
@@ -1781,7 +1781,7 @@ module AstToPrism
           location(node) # location
         )
       when :ONCE
-        not_supported(node)
+        not_expected(node)
       when :DSTR
         not_supported(node)
       when :DXSTR
