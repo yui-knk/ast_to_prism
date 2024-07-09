@@ -265,6 +265,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
   describe "array" do
     it "tests" do
       test_code("[]")
+    end
+
+    it "tests" do
       test_code("[1, 2]")
     end
   end
@@ -316,6 +319,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
   describe "range" do
     it "tests" do
       test_code("1..5")
+    end
+
+    it "tests" do
       test_code("1...5")
     end
   end
