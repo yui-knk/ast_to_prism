@@ -1043,447 +1043,458 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "BlockParameters" do
-    ## pre
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "pre" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
 
-      test_code(<<~CODE)
-        3.times do |i|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i|
+          end
+        CODE
+      end
     end
 
-    ## pre_init
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "pre_init" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
 
-      test_code(<<~CODE)
-        3.times do |(i, j)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |(i, j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(*i)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(*)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(i, *j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(i, *)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(*i, j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(*, i)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(i, *j, k)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |(i, *, j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |(i, j), k|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i, (j, k)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |(i, j), k = 0|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "opt" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalParameterNode locations are not supported"
 
-      test_code(<<~CODE)
-        3.times do |(*i)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i, j = 0, k = 1|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "post" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
 
-      test_code(<<~CODE)
-        3.times do |(*)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i, j = 0, k, l|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "post_init" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
 
-      test_code(<<~CODE)
-        3.times do |(i, *j)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, k)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, j, (k, l)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, k), l|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (*j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (*)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, *k)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, *)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (*j, k)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (*, j)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, *k, l)|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+
+        test_code(<<~CODE)
+          3.times do |i = 0, (j, *, k)|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "rest" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
 
-      test_code(<<~CODE)
-        3.times do |(i, *)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |*a|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i,|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i, *a|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i, j = 0, *a|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |*a, i|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i, *a, j|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i, j = 0, *a, k|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "kw" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredKeywordParameterNode locations are not supported"
 
-      test_code(<<~CODE)
-        3.times do |(*i, j)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i:|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalKeywordParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i: 1|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalKeywordParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i: 1, j:|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "kwrest" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
 
-      test_code(<<~CODE)
-        3.times do |(*, i)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |**h|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i:, **h|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i: 1, **h|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i: 1, j:, **h|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "block" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & BlockParameterNode locations are not supported"
 
-      test_code(<<~CODE)
-        3.times do |(i, *j, k)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |&blk|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
+    describe "Combinations" do
+      it "tests" do
+        pending "Fix order of locals items"
 
-      test_code(<<~CODE)
-        3.times do |(i, *, j)|
-        end
-      CODE
+        test_code(<<~CODE)
+          3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |i, j, k = 0, l, m: 1, n:, **h, &blk|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |i, j, k = 0, (l, m), n: 1, o:, **h, &blk|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Remove 'internal variable's from nd_tbl"
+
+        test_code(<<~CODE)
+          3.times do |(i, *j, k), l = 0, (m, *n, o)|
+          end
+        CODE
+      end
     end
 
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |(i, j), k|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i, (j, k)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |(i, j), k = 0|
-        end
-      CODE
-    end
-
-    ## opt
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, j = 0, k = 1|
-        end
-      CODE
-    end
-
-    ## post
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i, j = 0, k, l|
-        end
-      CODE
-    end
-
-    ## post_init
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, k)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, j, (k, l)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, k), l|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (*j)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (*)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, *k)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, *)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (*j, k)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (*, j)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, *k, l)|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredParameterNode location is not correct"
-
-      test_code(<<~CODE)
-        3.times do |i = 0, (j, *, k)|
-        end
-      CODE
-    end
-
-    ## rest
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |*a|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i,|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, *a|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, j = 0, *a|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |*a, i|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, *a, j|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, j = 0, *a, k|
-        end
-      CODE
-    end
-
-    ## kw
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & RequiredKeywordParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i:|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalKeywordParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i: 1|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & OptionalKeywordParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i: 1, j:|
-        end
-      CODE
-    end
-
-    ## kwrest
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |**h|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i:, **h|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i: 1, **h|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & KeywordRestParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i: 1, j:, **h|
-        end
-      CODE
-    end
-
-    ## block
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & BlockParameterNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |&blk|
-        end
-      CODE
-    end
-
-    ## Combinations
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |i, j, k = 0, l, m: 1, n:, **h, &blk|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |i, j, k = 0, (l, m), n: 1, o:, **h, &blk|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Remove 'internal variable's from nd_tbl"
-
-      test_code(<<~CODE)
-        3.times do |(i, *j, k), l = 0, (m, *n, o)|
-        end
-      CODE
-    end
-
-    ## With locals
-    it "tests" do
-      pending "opening_loc and closing_loc of BlockParametersNode are not supported & BlockLocalVariableNode locations are not supported"
-
-      test_code(<<~CODE)
-        3.times do |i, j; l1, l2, l3|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Fix order of locals items"
-
-      test_code(<<~CODE)
-        3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk; l1, l2, l3|
-        end
-      CODE
-    end
-
-    it "tests" do
-      pending "Remove 'internal variable's from nd_tbl"
-
-      test_code(<<~CODE)
-        3.times do |(i, *j, k), l = 0, (m, *n, o); l1, l2, l3|
-        end
-      CODE
+    describe "With locals" do
+      it "tests" do
+        pending "opening_loc and closing_loc of BlockParametersNode are not supported & BlockLocalVariableNode locations are not supported"
+
+        test_code(<<~CODE)
+          3.times do |i, j; l1, l2, l3|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Fix order of locals items"
+
+        test_code(<<~CODE)
+          3.times do |i, j, k = 0, *a, n: 1, o:, **h, &blk; l1, l2, l3|
+          end
+        CODE
+      end
+
+      it "tests" do
+        pending "Remove 'internal variable's from nd_tbl"
+
+        test_code(<<~CODE)
+          3.times do |(i, *j, k), l = 0, (m, *n, o); l1, l2, l3|
+          end
+        CODE
+      end
     end
   end
 
