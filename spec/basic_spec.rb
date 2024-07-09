@@ -2413,6 +2413,20 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "post-execution" do
+    it "tests" do
+      pending "PostExecutionNode locations are not supported"
+
+      test_code("END {  }")
+    end
+
+    it "tests" do
+      pending "PostExecutionNode locations are not supported"
+
+      test_code("END { foo }")
+    end
+  end
+
   describe "parentheses" do
     it "tests" do
       pending "Need to introduce ParenthesesNode"

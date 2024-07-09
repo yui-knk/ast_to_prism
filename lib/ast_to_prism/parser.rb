@@ -2065,7 +2065,19 @@ module AstToPrism
       when :DEFINED
         not_supported(node)
       when :POSTEXE
-        not_supported(node)
+        nd_body, = node.children
+        check_node_type(nd_body, :SCOPE)
+        nd_tbl, nd_args, nd_body2 = nd_body.children
+        statements = convert_begin_statements(nd_body2)
+
+        Prism::PostExecutionNode.new(
+          source,        # source
+          statements,    # statements
+          null_location, # keyword_loc
+          null_location, # opening_loc
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :ATTRASGN
         nd_recv, nd_mid, nd_args = node.children
 
