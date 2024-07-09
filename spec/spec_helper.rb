@@ -55,6 +55,17 @@ module Prism
     }
   end
 
+  class InterpolatedXStringNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.opening_loc == other.opening_loc &&
+        self.closing_loc == other.closing_loc
+      end
+    }
+  end
+
   class EmbeddedStatementsNode
     prepend Module.new {
       def ===(other)

@@ -222,6 +222,25 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "xstring literal with interpolation" do
+    it "tests" do
+      pending "InterpolatedXStringNode locations are not supported"
+
+      test_code(<<~'CODE')
+        `foo#{ bar }baz`
+      CODE
+    end
+
+    it "tests" do
+      pending "InterpolatedXStringNode locations are not supported"
+
+      test_code(<<~'CODE')
+        # frozen_string_literal: true
+        `foo#{ bar }baz`
+      CODE
+    end
+  end
+
   describe "regex" do
     it "tests" do
       pending "RegularExpressionNode locations are not supported"
