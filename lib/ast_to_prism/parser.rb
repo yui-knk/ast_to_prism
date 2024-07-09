@@ -727,6 +727,36 @@ module AstToPrism
       end
     end
 
+    def convert_dynamic_literal(node)
+      check_node_type(node, :DSTR, :DREGX)
+
+      string, nd_head, nd_next = node.children
+      flags = 0
+      parts = []
+
+      parts << Prism::StringNode.new(
+        source,         # source
+        flags,          # flags
+        null_location,  # opening_loc
+        null_location,  # content_loc
+        null_location,  # closing_loc
+        string,         # unescaped
+        null_location   # location
+      )
+
+      parts << convert_node(nd_head)
+
+      if nd_next
+        check_node_type(nd_next, :LIST)
+        # TODO: node.children should not include last nil
+        nd_next.children[0...-1].map do |n|
+          parts << convert_node(n)
+        end
+      end
+
+      return parts
+    end
+
     def convert_node(node, block: nil)
       return nil if node.nil?
 
@@ -1783,33 +1813,22 @@ module AstToPrism
       when :ONCE
         not_supported(node)
       when :DSTR
-        not_supported(node)
+        flags = 0
+        parts = convert_dynamic_literal(node)
+
+        Prism::InterpolatedStringNode.new(
+          source,        # source
+          flags,         # flags
+          null_location, # opening_loc
+          parts,         # parts
+          null_location, # closing_loc
+          location(node) # location
+        )
       when :DXSTR
         not_supported(node)
       when :DREGX
-        string, nd_head, nd_next = node.children
         flags = 0
-        parts = []
-
-        parts << Prism::StringNode.new(
-          source,         # source
-          flags,          # flags
-          null_location,  # opening_loc
-          null_location,  # content_loc
-          null_location,  # closing_loc
-          string,         # unescaped
-          null_location   # location
-        )
-
-        parts << convert_node(nd_head)
-
-        if nd_next
-          check_node_type(nd_next, :LIST)
-          # TODO: node.children should not include last nil
-          nd_next.children[0...-1].map do |n|
-            parts << convert_node(n)
-          end
-        end
+        parts = convert_dynamic_literal(node)
 
         Prism::InterpolatedRegularExpressionNode.new(
           source,        # source
