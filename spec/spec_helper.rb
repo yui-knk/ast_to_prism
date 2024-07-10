@@ -478,6 +478,16 @@ module Prism
     }
   end
 
+  class SplatNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.operator_loc == other.operator_loc
+      end
+    }
+  end
+
   class BeginNode
     prepend Module.new {
       def ===(other)

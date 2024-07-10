@@ -1667,6 +1667,156 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
   end
 
+  describe "arguments" do
+    describe "pos" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo a
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a, b)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo a, b
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo()
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo
+        CODE
+      end
+    end
+
+    describe "ARGSCAT" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(*ary1, a1, a2)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a1, *ary1)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a1, a2, *ary1)
+        CODE
+      end
+    end
+
+    describe "ARGSPUSH" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(*ary1, a1)
+        CODE
+      end
+    end
+
+    describe "ARGSCAT & ARGSPUSH" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a1, *ary1, a2, *ary2)
+        CODE
+      end
+    end
+
+    describe "SPLAT" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(*ary)
+        CODE
+      end
+    end
+
+    describe "BLOCK_PASS" do
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(&blk)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(x, &blk)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(*ary1, a1, a2, &blk)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a1, *ary1, &blk)
+        CODE
+      end
+
+      it "tests" do
+        pending "CallNode locations are not supported"
+
+        test_code(<<~CODE)
+          obj.foo(a1, a2, *ary1, &blk)
+        CODE
+      end
+    end
+  end
+
   describe "if" do
     it "tests" do
       pending "IfNode locations are not supported"
