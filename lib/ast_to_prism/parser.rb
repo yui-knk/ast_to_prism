@@ -82,18 +82,96 @@ module AstToPrism
       end
     end
 
-    def convert_arguments(args)
-      return nil if args.nil?
+    def _convert_arguments(nd_args)
+      arguments = []
+      block_node = nil
 
-      # TODO: node.children should not include last nil
-      arguments = args.children[0...-1].map do |node|
-        convert_node(node)
+      if nd_args.nil?
+        return arguments, block_node
       end
 
-      # TODO: Implement flags
+      case nd_args.type
+      when :LIST
+        # TODO: node.children should not include last nil
+        nd_args.children[0...-1].each do |node|
+           arguments << convert_node(node)
+        end
+      when :ARGSCAT
+        nd_head, nd_body = nd_args.children
 
-      # (source, flags, arguments, location)
-      Prism::ArgumentsNode.new(source, 0, arguments, location(args))
+        case nd_head.type
+        when :LIST, :ARGSPUSH
+          # E.g. `obj.foo(a1, ..., *ary1)`
+
+          arguments1, block_node1 = _convert_arguments(nd_head)
+          arguments += arguments1
+
+          arguments << Prism::SplatNode.new(
+            source,                # source
+            null_location,         # operator_loc
+            convert_node(nd_body), # expression
+            location(nd_body)      # location
+          )
+        else
+          # E.g. `obj.foo(*ary1, a1, a2)`
+          arguments1, block_node1 = _convert_arguments(nd_head)
+          arguments2, block_node2 = _convert_arguments(nd_body)
+
+          arguments += arguments1
+          arguments += arguments2
+        end
+      when :ARGSPUSH
+        nd_head, nd_body = nd_args.children
+        arguments1, block_node1 = _convert_arguments(nd_head)
+        arguments += arguments1
+        arguments << convert_node(nd_body)
+      when :SPLAT
+        nd_head, = nd_args.children
+
+        arguments << Prism::SplatNode.new(
+          source,                # source
+          null_location,         # operator_loc
+          convert_node(nd_head), # expression
+          location(nd_head)      # location
+        )
+      when :BLOCK_PASS
+        nd_head, nd_body = nd_args.children
+        arguments1, block_node1 = _convert_arguments(nd_head)
+        expression = convert_node(nd_body)
+
+        arguments += arguments1
+
+        block_node = Prism::BlockArgumentNode.new(
+          source,           # source
+          expression,       # expression
+          null_location,    # operator_loc
+          location(nd_args) # location
+        )
+      else
+        raise "#{nd_args.type} is not expected. #{nd_args.children}"
+      end
+
+      return arguments, block_node
+    end
+
+    def convert_arguments(nd_args)
+      return nil if nd_args.nil?
+
+      arguments, block_node = _convert_arguments(nd_args)
+
+      if arguments.empty?
+        arguments_node = nil
+      else
+        # TODO: Implement flags
+        arguments_node = Prism::ArgumentsNode.new(
+          source,           # source
+          0,                # flags
+          arguments,        # arguments
+          location(nd_args) # location
+        )
+      end
+
+      return arguments_node, block_node
     end
 
     def convert_assoc(node)
@@ -484,8 +562,12 @@ module AstToPrism
 
       # TODO: Implement flags
 
-      # (source, flags, arguments, location)
-      Prism::ArgumentsNode.new(source, 0, arguments, location(node))
+      Prism::ArgumentsNode.new(
+        source,        # source
+        0,             # flags
+        arguments,     # arguments
+        location(node) # location
+      )
     end
 
     # * NODE_WHEN
@@ -1156,7 +1238,7 @@ module AstToPrism
       when :OP_ASGN1
         nd_recv, nd_mid, nd_index, nd_rvalue = node.children
         receiver = convert_node(nd_recv)
-        arguments = convert_arguments(nd_index)
+        arguments, _ = convert_arguments(nd_index)
         # NOTE: Can block not be nil?
         block = nil
         binary_operator = nd_mid
@@ -1396,74 +1478,78 @@ module AstToPrism
       when :CALL
         # example: obj.foo(1)
         nd_recv, nd_mid, nd_args = node.children
+        arguments, block_node = convert_arguments(nd_args)
 
         Prism::CallNode.new(
-          source,                     # source
-          0,                          # flags
-          convert_node(nd_recv),      # receiver
-          nil,                        # call_operator_loc
-          nd_mid,                     # name
-          nil,                        # message_loc
-          nil,                        # opening_loc
-          convert_arguments(nd_args), # arguments
-          nil,                        # closing_loc
-          block,                      # block
-          location(node)              # location
+          source,                # source
+          0,                     # flags
+          convert_node(nd_recv), # receiver
+          nil,                   # call_operator_loc
+          nd_mid,                # name
+          nil,                   # message_loc
+          nil,                   # opening_loc
+          arguments,             # arguments
+          nil,                   # closing_loc
+          block || block_node,   # block
+          location(node)         # location
         )
       when :OPCALL
         # example: foo + bar
         nd_recv, nd_mid, nd_args = node.children
+        arguments, block_node = convert_arguments(nd_args)
 
         Prism::CallNode.new(
-          source,                     # source
-          0,                          # flags
-          convert_node(nd_recv),      # receiver
-          nil,                        # call_operator_loc
-          nd_mid,                     # name
-          nil,                        # message_loc
-          nil,                        # opening_loc
-          convert_arguments(nd_args), # arguments
-          nil,                        # closing_loc
-          block,                      # block
-          location(node)              # location
+          source,                # source
+          0,                     # flags
+          convert_node(nd_recv), # receiver
+          nil,                   # call_operator_loc
+          nd_mid,                # name
+          nil,                   # message_loc
+          nil,                   # opening_loc
+          arguments,             # arguments
+          nil,                   # closing_loc
+          block || block_node,   # block
+          location(node)         # location
         )
       when :QCALL
         # safe method invocation
         # example: obj&.foo(1)
         nd_recv, nd_mid, nd_args = node.children
         flags = Prism::CallNodeFlags::SAFE_NAVIGATION
+        arguments, block_node = convert_arguments(nd_args)
 
         Prism::CallNode.new(
-          source,                     # source
-          flags,                      # flags
-          convert_node(nd_recv),      # receiver
-          nil,                        # call_operator_loc
-          nd_mid,                     # name
-          nil,                        # message_loc
-          nil,                        # opening_loc
-          convert_arguments(nd_args), # arguments
-          nil,                        # closing_loc
-          block,                      # block
-          location(node)              # location
+          source,                # source
+          flags,                 # flags
+          convert_node(nd_recv), # receiver
+          nil,                   # call_operator_loc
+          nd_mid,                # name
+          nil,                   # message_loc
+          nil,                   # opening_loc
+          arguments,             # arguments
+          nil,                   # closing_loc
+          block || block_node,   # block
+          location(node)         # location
         )
       when :FCALL
         # function call
         # example: foo(1)
         nd_mid, nd_args = node.children
         flags = Prism::CallNodeFlags::IGNORE_VISIBILITY
+        arguments, block_node = convert_arguments(nd_args)
 
         Prism::CallNode.new(
-          source,                     # source
-          flags,                      # flags
-          nil,                        # receiver
-          nil,                        # call_operator_loc
-          nd_mid,                     # name
-          nil,                        # message_loc
-          nil,                        # opening_loc
-          convert_arguments(nd_args), # arguments
-          nil,                        # closing_loc
-          block,                      # block
-          location(node)              # location
+          source,              # source
+          flags,               # flags
+          nil,                 # receiver
+          nil,                 # call_operator_loc
+          nd_mid,              # name
+          nil,                 # message_loc
+          nil,                 # opening_loc
+          arguments,           # arguments
+          nil,                 # closing_loc
+          block || block_node, # block
+          location(node)       # location
         )
       when :VCALL
         # function call with no argument
@@ -1484,14 +1570,17 @@ module AstToPrism
           location(node)    # location
         )
       when :SUPER
+        nd_args, _ = node.children
+        arguments, block_node = convert_arguments(nd_args)
+
         Prism::SuperNode.new(
-          source,                              # source
-          null_location,                       # keyword_loc
-          null_location,                       # lparen_loc
-          convert_arguments(node.children[0]), # arguments
-          null_location,                       # rparen_loc
-          block,                               # block
-          location(node)                       # location
+          source,              # source
+          null_location,       # keyword_loc
+          null_location,       # lparen_loc
+          arguments,           # arguments
+          null_location,       # rparen_loc
+          block || block_node, # block
+          location(node)       # location
         )
       when :ZSUPER
         Prism::ForwardingSuperNode.new(
@@ -1522,14 +1611,15 @@ module AstToPrism
         )
       when :YIELD
         nd_head, = node.children
+        arguments, _ = convert_arguments(nd_head)
 
         Prism::YieldNode.new(
-          source,                     # source
-          null_location,              # keyword_loc
-          null_location,              # lparen_loc
-          convert_arguments(nd_head), # arguments
-          null_location,              # rparen_loc
-          location(node)              # location
+          source,        # source
+          null_location, # keyword_loc
+          null_location, # lparen_loc
+          arguments,     # arguments
+          null_location, # rparen_loc
+          location(node) # location
         )
       when :LVAR
         nd_vid, = node.children
@@ -1882,13 +1972,13 @@ module AstToPrism
           location(node) # location
         )
       when :ARGSCAT
-        not_supported(node)
+        not_expected(node)
       when :ARGSPUSH
-        not_supported(node)
+        not_expected(node)
       when :SPLAT
-        not_supported(node)
+        not_expected(node)
       when :BLOCK_PASS
-        not_supported(node)
+        not_expected(node)
       when :DEFN
         nd_mid, nd_defn = node.children
         nd_tbl, nd_args, nd_body = nd_defn.children
@@ -2080,19 +2170,20 @@ module AstToPrism
         )
       when :ATTRASGN
         nd_recv, nd_mid, nd_args = node.children
+        arguments, _ = convert_arguments(nd_args)
 
         Prism::CallNode.new(
-          source,                     # source
-          0,                          # flags
-          convert_node(nd_recv),      # receiver
-          nil,                        # call_operator_loc
-          nd_mid,                     # name
-          nil,                        # message_loc
-          nil,                        # opening_loc
-          convert_arguments(nd_args), # arguments
-          nil,                        # closing_loc
-          nil,                        # block
-          location(node)              # location
+          source,                # source
+          0,                     # flags
+          convert_node(nd_recv), # receiver
+          nil,                   # call_operator_loc
+          nd_mid,                # name
+          nil,                   # message_loc
+          nil,                   # opening_loc
+          arguments,             # arguments
+          nil,                   # closing_loc
+          nil,                   # block
+          location(node)         # location
         )
       when :LAMBDA
         nd_body, = node.children
