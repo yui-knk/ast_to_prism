@@ -2206,9 +2206,9 @@ module AstToPrism
       when :KW_ARG
         not_supported(node)
       when :POSTARG
-        not_supported(node)
+        not_expected(node)
       when :ARGS
-        not_supported(node)
+        not_expected(node)
       when :SCOPE
         # TODO: not_expected ?
         not_supported(node)
