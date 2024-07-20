@@ -2092,12 +2092,16 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "undef" do
-    xit "tests" do
+    it "tests" do
+      pending "UndefNode keyword_loc is not supported"
+
       test_code("undef foo")
     end
 
-    xit "tests" do
-      test_code("undef foo :bar")
+    it "tests" do
+      pending "UndefNode keyword_loc is not supported"
+
+      test_code("undef foo, :bar")
     end
   end
 

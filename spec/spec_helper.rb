@@ -210,6 +210,16 @@ module Prism
     }
   end
 
+  class UndefNode
+    prepend Module.new {
+      def ===(other)
+        super(other) &&
+        self.location == other.location &&
+        self.keyword_loc == other.keyword_loc
+      end
+    }
+  end
+
   class LocalVariableVariableReadNode
     prepend Module.new {
       def ===(other)
