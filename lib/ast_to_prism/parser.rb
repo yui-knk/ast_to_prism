@@ -2046,9 +2046,22 @@ module AstToPrism
       when :UNDEF
         # TODO: Change original node structures
 
-        nd_undef, = node.children
-        sym = Prism::SymbolNode.new(source, 0, null_location, null_location, null_location, node.children[0], location(node))
-        names = [sym]
+        nd_undefs, = node.children
+        names = nd_undefs.map do |node|
+          string, = node.children[0]
+          # TODO: Implement flags
+          flags = 0
+
+          Prism::SymbolNode.new(
+            source,        # source
+            flags,         # flags
+            null_location, # opening_loc
+            null_location, # value_loc
+            null_location, # closing_loc
+            string.to_s,   # unescaped
+            location(node) # location
+          )
+        end
 
         Prism::UndefNode.new(
           source,         # source
