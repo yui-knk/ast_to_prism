@@ -140,7 +140,7 @@ module Prism
       def ===(other)
         super(other) &&
         self.location == other.location &&
-        self.if_keyword_loc == other.if_keyword_loc &&
+        self.keyword_loc == other.keyword_loc &&
         self.then_keyword_loc == other.then_keyword_loc &&
         self.end_keyword_loc == other.end_keyword_loc
       end
