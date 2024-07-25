@@ -1901,8 +1901,6 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "unless" do
     it "tests" do
-      pending "UnlessNode locations are not supported"
-
       test_code(<<~CODE)
         unless true
           1
@@ -1911,7 +1909,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "UnlessNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         unless true
@@ -1923,7 +1921,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "UnlessNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         unless true then
@@ -1937,8 +1935,6 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "modifier unless" do
     it "tests" do
-      pending "if_keyword_loc, then_keyword_loc and end_keyword_loc are not supported"
-
       test_code("1 unless true")
     end
   end

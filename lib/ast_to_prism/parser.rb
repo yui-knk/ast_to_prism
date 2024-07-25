@@ -25,6 +25,11 @@ module AstToPrism
     end
 
     def location(node)
+      return nil if !node
+      # TODO: In some cases, e.g. terms, location has 0 range.
+      #       Return nil for the case.
+      return nil if (node.first_lineno == node.last_lineno && node.first_column == node.last_column)
+
       first_offset = line_to_offset[node.first_lineno - 1] + node.first_column
       last_offset  = line_to_offset[node.last_lineno - 1] + node.last_column
 
@@ -883,6 +888,7 @@ module AstToPrism
         )
       when :UNLESS
         nd_cond, nd_body, nd_else = node.children
+        loc, keyword_loc, then_keyword_loc, end_keyword_loc = node.locations
         consequent = nil
 
         if nd_else
@@ -897,14 +903,14 @@ module AstToPrism
         end
 
         Prism::UnlessNode.new(
-          source,                 # source
-          null_location,          # keyword_loc
-          convert_node(nd_cond),  # predicate
-          null_location,          # then_keyword_loc
-          convert_stmts(nd_body), # statements
-          consequent,             # consequent
-          null_location,          # end_keyword_loc
-          location(node)          # location
+          source,                     # source
+          location(keyword_loc),      # keyword_loc
+          convert_node(nd_cond),      # predicate
+          location(then_keyword_loc), # then_keyword_loc
+          convert_stmts(nd_body),     # statements
+          consequent,                 # consequent
+          location(end_keyword_loc),  # end_keyword_loc
+          location(loc)               # location
         )
       when :CASE
         nd_head, nd_body = node.children
