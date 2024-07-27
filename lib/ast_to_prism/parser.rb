@@ -1105,7 +1105,7 @@ module AstToPrism
           location(node)                     # location
         )
       when :RESBODY
-        nd_args, nd_body, nd_next  = node.children
+        nd_args, nd_exc_var, nd_body, nd_next = node.children
 
         if nd_args
           exceptions = nd_args.children[0...-1].map do |n|
@@ -1115,14 +1115,13 @@ module AstToPrism
           exceptions = []
         end
 
-        # TODO: Change original node structures and extract ERRINFO info
-        if errinfo_assign?(nd_body) # `rescue Err => e` or not
-          reference = convert_errinfo_assignment(nd_body.children[0])
-          statements = convert_begin_statements(nd_body, 1..-1)
+        if nd_exc_var # `rescue Err => e` or not
+          reference = convert_errinfo_assignment(nd_exc_var)
         else
           reference = nil
-          statements = convert_begin_statements(nd_body)
         end
+
+        statements = convert_begin_statements(nd_body)
 
         Prism::RescueNode.new(
           source,                # source
