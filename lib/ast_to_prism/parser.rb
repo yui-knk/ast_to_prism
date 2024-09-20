@@ -2052,6 +2052,7 @@ module AstToPrism
         # TODO: Change original node structures
 
         nd_undefs, = node.children
+        loc, keyword_loc = node.locations
         names = nd_undefs.map do |node|
           string, = node.children[0]
           # TODO: Implement flags
@@ -2069,10 +2070,10 @@ module AstToPrism
         end
 
         Prism::UndefNode.new(
-          source,         # source
-          names,          # names
-          null_location,  # keyword_loc
-          location(node), # location
+          source,                # source
+          names,                 # names
+          location(keyword_loc), # keyword_loc
+          location(loc),         # location
         )
       when :CLASS
         # NOTE: In Prism ClassNode has locals but I think locals is a member of CLASS body stmts.
