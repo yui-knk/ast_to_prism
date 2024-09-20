@@ -2028,14 +2028,14 @@ module AstToPrism
         )
       when :ALIAS
         nd_1st, nd_2nd = node.children
+        loc, keyword_loc = node.locations
 
-        # (source, new_name, old_name, keyword_loc, location)
         Prism::AliasMethodNode.new(
-          source,
-          convert_node(nd_1st),
-          convert_node(nd_2nd),
-          null_location,
-          location(node)
+          source,                # source
+          convert_node(nd_1st),  # new_name
+          convert_node(nd_2nd),  # old_name
+          location(keyword_loc), # keyword_loc
+          location(loc),         # location
         )
       when :VALIAS
         nd_alias, nd_orig = node.children
