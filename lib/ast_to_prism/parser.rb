@@ -589,6 +589,7 @@ module AstToPrism
 
       while node do
         nd_head, nd_body, nd_next = node.children
+        loc, keyword_loc, then_keyword_loc = node.locations
 
         cond = nd_head.children[0...-1].map do |n|
           convert_node(n)
@@ -596,11 +597,11 @@ module AstToPrism
 
         conditions << Prism::WhenNode.new(
           source,                           # source
-          null_location,                    # keyword_loc
+          location(keyword_loc),            # keyword_loc
           cond,                             # conditions
-          null_location,                    # then_keyword_loc
+          location(then_keyword_loc),       # then_keyword_loc
           convert_case_statements(nd_body), # statements
-          location(node)                    # location
+          location(loc)                     # location
         )
 
         if nd_next&.type == :WHEN
