@@ -1941,7 +1941,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "while" do
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "message_loc is not supported"
 
       test_code(<<~CODE)
         while x == 1 do
@@ -1951,7 +1951,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "message_loc is not supported"
 
       test_code(<<~CODE)
         while x == 1
@@ -1963,13 +1963,11 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "modifier while" do
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
-
       test_code("foo while true")
     end
 
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "CallNode locations are not supported"
 
       test_code("begin foo end while true")
     end
