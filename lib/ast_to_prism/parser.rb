@@ -1049,9 +1049,12 @@ module AstToPrism
           location(node)         # location
         )
       when :REDO
+        loc, keyword_loc = node.locations
+
         Prism::RedoNode.new(
-          source,        # source
-          location(node) # location
+          source,                # source
+          location(keyword_loc), # keyword_loc
+          location(loc)          # location
         )
       when :RETRY
         Prism::RetryNode.new(
