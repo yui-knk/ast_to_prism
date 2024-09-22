@@ -964,6 +964,7 @@ module AstToPrism
         )
       when :UNTIL
         nd_cond, nd_body, nd_state = node.children
+        loc, keyword_loc, closing_loc = node.locations
 
         if nd_state
           flags = 0
@@ -974,11 +975,11 @@ module AstToPrism
         Prism::UntilNode.new(
           source,                 # source
           flags,                  # flags
-          null_location,          # keyword_loc
-          null_location,          # closing_loc
+          location(keyword_loc),  # keyword_loc
+          location(closing_loc),  # closing_loc
           convert_node(nd_cond),  # predicate
           convert_stmts(nd_body), # statements
-          location(node)          # location
+          location(loc)           # location
         )
       when :ITER
         # example: 3.times { foo }

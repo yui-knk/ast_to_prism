@@ -1977,7 +1977,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "until" do
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "message_loc is not supported"
 
       test_code(<<~CODE)
         until x == 1 do
@@ -1987,7 +1987,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "message_loc is not supported"
 
       test_code(<<~CODE)
         until x == 1
@@ -1999,13 +1999,11 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "modifier until" do
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
-
       test_code("foo until true")
     end
 
     it "tests" do
-      pending "keyword_loc and closing_loc are not supported"
+      pending "StatementNode with begin keyword is not supported"
 
       test_code("begin foo end until true")
     end
