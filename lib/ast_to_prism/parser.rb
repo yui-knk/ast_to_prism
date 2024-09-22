@@ -1029,12 +1029,13 @@ module AstToPrism
         )
       when :NEXT
         nd_stts, = node.children
+        loc, keyword_loc = node.locations
 
         Prism::NextNode.new(
           source,                # source
           convert_stts(nd_stts), # arguments
-          null_location,         # keyword_loc
-          location(node)         # location
+          location(keyword_loc), # keyword_loc
+          location(loc)          # location
         )
       when :RETURN
         nd_stts, = node.children
