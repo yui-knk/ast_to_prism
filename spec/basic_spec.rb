@@ -651,16 +651,12 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "array assignment with operator (OP_ASGN1)" do
     it "tests" do
-      pending "IndexOperatorWriteNode locations are not supported"
-
       test_code(<<~CODE)
         ary[1] += foo
       CODE
     end
 
     it "tests" do
-      pending "IndexOperatorWriteNode locations are not supported"
-
       test_code(<<~CODE)
         ary[1, 2] += foo
       CODE
