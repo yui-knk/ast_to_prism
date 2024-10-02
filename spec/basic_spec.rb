@@ -2072,11 +2072,15 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "alias" do
-    xit "tests" do
+    it "tests" do
+      pending "SymbolNode locations is not supported"
+
       test_code("alias bar foo")
     end
 
-    xit "tests" do
+    it "tests" do
+      pending "SymbolNode locations is not supported"
+
       test_code("alias :bar :foo")
     end
   end
