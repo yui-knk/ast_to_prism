@@ -2086,7 +2086,9 @@ RSpec.describe "basic test cases return same nodes with prism" do
   end
 
   describe "valias" do
-    xit "tests" do
+    it "tests" do
+      pending "GlobalVariableReadNode locations are not supported"
+
       test_code("alias $y $x")
     end
   end

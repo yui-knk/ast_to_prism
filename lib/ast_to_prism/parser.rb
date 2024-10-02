@@ -2039,14 +2039,15 @@ module AstToPrism
         )
       when :VALIAS
         nd_alias, nd_orig = node.children
+        loc, keyword_loc = node.locations
 
         # (source, new_name, old_name, keyword_loc, location)
         Prism::AliasGlobalVariableNode.new(
           source,
           Prism::GlobalVariableReadNode.new(source, nd_alias, null_location),
           Prism::GlobalVariableReadNode.new(source, nd_orig, null_location),
-          null_location,
-          location(node)
+          location(keyword_loc),
+          location(loc),
         )
       when :UNDEF
         # TODO: Change original node structures
