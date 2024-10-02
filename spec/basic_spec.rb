@@ -2460,7 +2460,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "case with head" do
     it "tests" do
-      pending "WhenNode locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case x
@@ -2470,7 +2470,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case x
@@ -2480,7 +2480,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations and ElseNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         case x
@@ -2491,7 +2491,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case x
@@ -2504,7 +2504,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations and ElseNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         case x
@@ -2521,7 +2521,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "case with no head" do
     it "tests" do
-      pending "WhenNode locations locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case
@@ -2531,7 +2531,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case
@@ -2541,7 +2541,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations and ElseNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         case
@@ -2552,7 +2552,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations locations are not supported"
+      pending "CaseNode locations are not supported"
 
       test_code(<<~CODE)
         case
@@ -2565,7 +2565,7 @@ RSpec.describe "basic test cases return same nodes with prism" do
     end
 
     it "tests" do
-      pending "WhenNode locations and ElseNode locations are not supported"
+      pending "ElseNode locations are not supported"
 
       test_code(<<~CODE)
         case
