@@ -1176,25 +1176,25 @@ module AstToPrism
         )
       when :AND
         nd_1st, nd_2nd = node.children
+        loc, operator_loc = node.locations
 
-        # (source, left, right, operator_loc, location)
         Prism::AndNode.new(
-          source,
-          convert_node(nd_1st),
-          convert_node(nd_2nd),
-          null_location,
-          location(node)
+          source,                 # source
+          convert_node(nd_1st),   # left
+          convert_node(nd_2nd),   # right
+          location(operator_loc), # operator_loc
+          location(loc),          # location
         )
       when :OR
         nd_1st, nd_2nd = node.children
+        loc, operator_loc = node.locations
 
-        # (source, left, right, operator_loc, location)
         Prism::OrNode.new(
-          source,
-          convert_node(nd_1st),
-          convert_node(nd_2nd),
-          null_location,
-          location(node)
+          source,                 # source
+          convert_node(nd_1st),   # left
+          convert_node(nd_2nd),   # right
+          location(operator_loc), # operator_loc
+          location(loc),          # location
         )
       when :MASGN
         not_supported(node)

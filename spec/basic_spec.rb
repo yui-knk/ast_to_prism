@@ -897,28 +897,20 @@ RSpec.describe "basic test cases return same nodes with prism" do
 
   describe "and" do
     it "tests" do
-      pending "operator_loc is not supported"
-
       test_code("1 && 2")
     end
 
     it "tests" do
-      pending "operator_loc is not supported"
-
       test_code("1 and 2")
     end
   end
 
   describe "or" do
     it "tests" do
-      pending "operator_loc is not supported"
-
       test_code("1 || 2")
     end
 
     it "tests" do
-      pending "operator_loc is not supported"
-
       test_code("1 or 2")
     end
   end
