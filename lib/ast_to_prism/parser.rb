@@ -1250,6 +1250,7 @@ module AstToPrism
         not_supported(node)
       when :OP_ASGN1
         nd_recv, nd_mid, nd_index, nd_rvalue = node.children
+        loc, call_operator_loc, opening_loc, closing_loc, binary_operator_loc = node.locations
         receiver = convert_node(nd_recv)
         arguments, _ = convert_arguments(nd_index)
         # NOTE: Can block not be nil?
@@ -1258,18 +1259,18 @@ module AstToPrism
         value = convert_node(nd_rvalue)
 
         Prism::IndexOperatorWriteNode.new(
-          source,          # source
-          0,               # flags
-          receiver,        # receiver
-          null_location,   # call_operator_loc
-          null_location,   # opening_loc
-          arguments,       # arguments
-          null_location,   # closing_loc
-          block,           # block
-          binary_operator, # binary_operator
-          null_location,   # binary_operator_loc
-          value,           # value
-          location(node)   # location
+          source,                        # source
+          0,                             # flags
+          receiver,                      # receiver
+          location(call_operator_loc),   # call_operator_loc
+          location(opening_loc),         # opening_loc
+          arguments,                     # arguments
+          location(closing_loc),         # closing_loc
+          block,                         # block
+          binary_operator,               # binary_operator
+          location(binary_operator_loc), # binary_operator_loc
+          value,                         # value
+          location(loc)                  # location
         )
       when :OP_ASGN2
         nd_recv, nd_aid, nd_vid, nd_mid, nd_value = node.children
